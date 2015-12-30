@@ -70,6 +70,8 @@ public class WeatherServiceAsync extends Service {
                 public void run() {
 
                     // TODO - add utils for downloading and returning a list to the calling object
+                    // TODO - check weather cache,  download and parse json data, update weather cache
+
 
                 }
             };
@@ -86,6 +88,8 @@ public class WeatherServiceAsync extends Service {
                 public void run() {
 
                     // TODO - add utils for downloading and returning a list to the calling object
+                    // TODO - check weather cache,  download and parse json data, update weather cache
+
 
                 }
             };

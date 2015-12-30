@@ -55,7 +55,7 @@ public class WeatherServiceSync extends Service {
         public List<WeatherCurrentData> getCurrentWeatherData(String location)
                 throws RemoteException {
 
-            // TODO - download and parse json data
+            // TODO - check weather cache,  download and parse json data, update weather cache
             return null;
         }
 
@@ -63,7 +63,7 @@ public class WeatherServiceSync extends Service {
         public List<WeatherForecastData> getForecastWeatherData(String location)
                 throws RemoteException {
 
-            // TODO - download and parse json data
+            // TODO - check weather cache,  download and parse json data, update weather cache
             return null;
         }
     };
