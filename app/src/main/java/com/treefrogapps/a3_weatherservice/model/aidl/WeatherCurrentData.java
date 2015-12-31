@@ -33,6 +33,22 @@ public class WeatherCurrentData implements Parcelable {
 
     private static String TAG = WeatherCurrentData.class.getSimpleName();
 
+    /**
+     * Time stamp to be added after json has been parsed using gson
+     * Time stamp is first into parcel in, an first out
+     */
+    private long mTimeStamp;
+
+    public long getTimeStamp(){
+        return this.mTimeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp){
+        this.mTimeStamp = timeStamp;
+    }
+
+
+
     @SerializedName("coord")
     private Coordinates mCoordinates;
 
@@ -381,6 +397,9 @@ public class WeatherCurrentData implements Parcelable {
          * in EXACT order they were put in the writeToParcel method
          */
 
+        // get current system time when object is parceled
+        mTimeStamp = in.readLong();
+
         mCoordinates = new Coordinates(in.readDouble(),
                                        in.readDouble());
 
@@ -429,6 +448,8 @@ public class WeatherCurrentData implements Parcelable {
          * the EXACT order they will be taken out in the Constructor :
          *      private WeatherCurrentData(Parcel in)
          */
+
+        dest.writeLong(mTimeStamp);
         dest.writeDouble(mCoordinates.getLongitude());
         dest.writeDouble(mCoordinates.getLatitude());
 

@@ -33,6 +33,21 @@ public class WeatherForecastData implements Parcelable {
 
     private static String TAG = WeatherForecastData.class.getSimpleName();
 
+    /**
+     * Time stamp to be added after json has been parsed using gson
+     * Time stamp is first into parcel in, an first out
+     */
+    private long mTimeStamp;
+
+    public long getTimeStamp(){
+        return this.mTimeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp){
+        this.mTimeStamp = timeStamp;
+    }
+
+
     @SerializedName("city")
     private City mCity;
 
@@ -414,7 +429,9 @@ public class WeatherForecastData implements Parcelable {
 
         Log.d(TAG, "Reading from Parcel");
 
-        // ** ADD CURRENT WEATHER OBJECT FIRST **
+        mTimeStamp = in.readLong();
+
+        // ** ADD CURRENT WEATHER OBJECT FIRST AFTER TIMESTAMP **
         mCurrentWeather.add(new CurrentWeather(in.readInt(),
                 in.readString(),
                 in.readString(),
@@ -456,7 +473,9 @@ public class WeatherForecastData implements Parcelable {
          *      private WeatherCurrentData(Parcel in)
          */
 
-        // ** ADD CURRENT WEATHER OBJECT FIRST **
+        dest.writeLong(mTimeStamp);
+
+        // ** ADD CURRENT WEATHER OBJECT FIRST AFTER TIMESTAMP**
         dest.writeInt(mCurrentWeather.get(0).getWeatherCode());
         dest.writeString(mCurrentWeather.get(0).getWeatherType());
         dest.writeString(mCurrentWeather.get(0).getWeatherDescription());

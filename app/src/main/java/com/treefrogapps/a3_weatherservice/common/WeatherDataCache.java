@@ -11,12 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WeatherDataCache {
 
-    private static ConcurrentHashMap<String, ArrayList<WeatherCurrentData>> weatherCurrentHashMap
-             = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, ArrayList<WeatherCurrentData>> weatherCurrentHashMap
+            = new ConcurrentHashMap<>();
 
-    private static ConcurrentHashMap<String, ArrayList<WeatherForecastData>> weatherForecastHashMap
-             = new ConcurrentHashMap<>();
-
+    public static ConcurrentHashMap<String, ArrayList<WeatherForecastData>> weatherForecastHashMap
+            = new ConcurrentHashMap<>();
 
     private static final long TIMEOUT_CURRENT_WEATHER = 1000 * 60 * 5; // 5 minutes
 
@@ -32,18 +31,17 @@ public class WeatherDataCache {
      * @param location String 'Key' in Concurrent HashMap
      * @return either an empty ArrayList, or with 1 item in it.
      */
-    public static ArrayList<WeatherCurrentData> currentWeatherLookUp (String location){
+    public static ArrayList<WeatherCurrentData> currentWeatherLookUp(String location) {
 
-        ArrayList<WeatherCurrentData> weatherCurrentData = new ArrayList<>();
+        if (weatherCurrentHashMap.containsKey(location)) {
 
-        if (weatherCurrentHashMap.containsKey(location)){
+            ArrayList<WeatherCurrentData> weatherCurrentData
+                    = weatherCurrentHashMap.get(location);
 
-            weatherCurrentData = weatherCurrentHashMap.get(location);
-
-            long dataTime = weatherCurrentData.get(0).getDateTime();
+            long dataTime = weatherCurrentData.get(0).getTimeStamp();
             long currentTime = System.currentTimeMillis();
 
-            if ((currentTime - dataTime) < TIMEOUT_CURRENT_WEATHER){
+            if ((currentTime - dataTime) < TIMEOUT_CURRENT_WEATHER) {
 
                 return weatherCurrentData;
 
@@ -53,9 +51,7 @@ public class WeatherDataCache {
             }
         }
 
-        weatherCurrentData.clear();
-
-        return weatherCurrentData;
+        return null;
     }
 
 
@@ -68,18 +64,17 @@ public class WeatherDataCache {
      * @param location String 'Key' in Concurrent HashMap
      * @return either an empty ArrayList, or with 1 item in it.
      */
-    public static ArrayList<WeatherForecastData> forecastWeatherLookUp (String location){
+    public static ArrayList<WeatherForecastData> forecastWeatherLookUp(String location) {
 
-        ArrayList<WeatherForecastData> weatherforecastData = new ArrayList<>();
+        if (weatherForecastHashMap.containsKey(location)) {
 
-        if (weatherForecastHashMap.containsKey(location)){
+            ArrayList<WeatherForecastData> weatherforecastData
+                    = weatherForecastHashMap.get(location);
 
-            weatherforecastData = weatherForecastHashMap.get(location);
-
-            long dataTime = weatherforecastData.get(0).getWeatherLists().get(0).getDateTime();
+            long dataTime = weatherforecastData.get(0).getTimeStamp();
             long currentTime = System.currentTimeMillis();
 
-            if ((currentTime - dataTime) < TIMEOUT_FORECAST_WEATHER){
+            if ((currentTime - dataTime) < TIMEOUT_FORECAST_WEATHER) {
 
                 return weatherforecastData;
 
@@ -89,24 +84,19 @@ public class WeatherDataCache {
             }
         }
 
-        weatherforecastData.clear();
-
-        return weatherforecastData;
+        return null;
     }
 
 
-
     public static void putCurrentHashMap(String location,
-                                         ArrayList<WeatherCurrentData> weatherCurrentData){
+                                         ArrayList<WeatherCurrentData> weatherCurrentData) {
 
         weatherCurrentHashMap.put(location, weatherCurrentData);
     }
 
 
-
-
     public static void putForeCastHashMap(String location,
-                                         ArrayList<WeatherForecastData> weatherForecastData){
+                                          ArrayList<WeatherForecastData> weatherForecastData) {
 
         weatherForecastHashMap.put(location, weatherForecastData);
     }
