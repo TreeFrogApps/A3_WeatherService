@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
+import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherOneWayReply;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherOneWayRequest;
 
@@ -26,7 +28,7 @@ public class WeatherServiceAsync extends Service {
         super.onCreate();
 
         /**
-         * Create Thread Pool, otherwise one way aidl calls are done on a single thread
+         * Create Thread Pool, otherwise one way aidl calls (Async) are done on a single thread
          */
         mExecutorService = Executors.newCachedThreadPool();
     }
@@ -62,7 +64,7 @@ public class WeatherServiceAsync extends Service {
 
 
         @Override
-        public void getCurrentWeatherRequest(String location, WeatherOneWayReply resultsCallback)
+        public void getCurrentWeatherRequest(String location, final WeatherOneWayReply resultsCallback)
                 throws RemoteException {
 
             final Runnable currentWeatherRunnable = new Runnable() {
@@ -72,6 +74,27 @@ public class WeatherServiceAsync extends Service {
                     // TODO - add utils for downloading and returning a list to the calling object
                     // TODO - check weather cache,  download and parse json data, update weather cache
 
+                    WeatherCurrentData weatherCurrentData = new WeatherCurrentData();
+                    String error = null;
+
+
+                    /**
+                     * Send either string with error in for debugging, or if successful send back
+                     * weather data
+                     */
+                    try {
+
+                        if (error !=null) {
+
+                            resultsCallback.sendError(error);
+                        } else {
+                            resultsCallback.sendCurrentResults(weatherCurrentData);
+
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+
 
                 }
             };
@@ -80,7 +103,7 @@ public class WeatherServiceAsync extends Service {
         }
 
         @Override
-        public void getForecastWeatherRequest(String location, WeatherOneWayReply resultsCallback)
+        public void getForecastWeatherRequest(String location, final WeatherOneWayReply resultsCallback)
                 throws RemoteException {
 
             final Runnable forecastWeatherRunnable = new Runnable() {
@@ -90,6 +113,29 @@ public class WeatherServiceAsync extends Service {
                     // TODO - add utils for downloading and returning a list to the calling object
                     // TODO - check weather cache,  download and parse json data, update weather cache
 
+
+                    WeatherForecastData weatherForecastData = new WeatherForecastData();
+                    String error = null;
+
+
+
+
+                    /**
+                     * Send either string with error in for debugging, or if successful send back
+                     * weather data
+                     */
+                    try {
+
+                        if (error !=null) {
+
+                            resultsCallback.sendError(error);
+                        } else {
+                            resultsCallback.sendForecastResults(weatherForecastData);
+
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
 
                 }
             };

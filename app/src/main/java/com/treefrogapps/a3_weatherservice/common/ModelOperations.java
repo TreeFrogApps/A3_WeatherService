@@ -14,5 +14,5 @@ public interface ModelOperations<PresenterInterface> {
      */
     void onCreate(PresenterInterface presenterInterface);
 
-    void onDestroy();
+    void onDestroy(boolean changingConfigurations);
 }

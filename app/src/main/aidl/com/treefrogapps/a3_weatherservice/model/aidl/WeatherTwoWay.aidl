@@ -6,7 +6,6 @@ package com.treefrogapps.a3_weatherservice.model.aidl;
 
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
-import java.util.List;
 
 interface WeatherTwoWay {
 
@@ -14,8 +13,8 @@ interface WeatherTwoWay {
  *  Two way BLOCKING calls for weather data - should be performed off the main UI thread
  *
  */
-    List<WeatherCurrentData> getCurrentWeatherData (in String location);
+    WeatherCurrentData getCurrentWeatherData (in String location);
 
-    List<WeatherForecastData> getForecastWeatherData (in String location);
+    WeatherForecastData getForecastWeatherData (in String location);
 
 }

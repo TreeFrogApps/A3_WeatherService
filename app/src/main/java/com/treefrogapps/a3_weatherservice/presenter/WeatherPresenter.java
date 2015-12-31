@@ -1,9 +1,12 @@
 package com.treefrogapps.a3_weatherservice.presenter;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.treefrogapps.a3_weatherservice.MVP;
 import com.treefrogapps.a3_weatherservice.model.WeatherModel;
+import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
+import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
 
 import java.lang.ref.WeakReference;
 
@@ -51,6 +54,57 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
 
         mViewInterface = new WeakReference<>(viewInterface);
     }
+
+    /**
+     * Methods for gaining contexts from the WeatherActivity, which extends
+     * Generic Activity which Implementes this interface along with the Presenter interface
+     * @return a Context
+     */
+    @Override
+    public Context getActivityContext() {
+        return mViewInterface.get().getActivityContext();
+    }
+
+    @Override
+    public Context getAppContext() {
+        return mViewInterface.get().getAppContext();
+    }
+
+
+
+
+    @Override
+    public void getWeatherCurrentSync(String location) {
+
+    }
+
+    @Override
+    public void getWeatherForecastSync(String location) {
+
+    }
+
+    @Override
+    public void getWeatherCurrentASync(String location) {
+
+    }
+
+    @Override
+    public void getWeatherForecastASync(String location) {
+
+    }
+
+
+
+    @Override
+    public void displayCurrentResults(WeatherCurrentData weatherCurrentData, String error) {
+
+    }
+
+    @Override
+    public void displayForecastResults(WeatherForecastData weatherForecastData, String error) {
+
+    }
+
 
     @Override
     public void onDestroy() {

@@ -3,6 +3,8 @@ package com.treefrogapps.a3_weatherservice;
 import com.treefrogapps.a3_weatherservice.common.ContextView;
 import com.treefrogapps.a3_weatherservice.common.ModelOperations;
 import com.treefrogapps.a3_weatherservice.common.PresenterOperations;
+import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
+import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
 
 /**
  * Model View Presenter Interfaces used with the corresponding classes
@@ -33,8 +35,21 @@ public interface MVP {
      * Extends the 'Base' Presenter Operations Interface required by every Presenter layer
      * Presenter Operations is given a View Interface Reference
      */
-    interface WeatherPresenterInterface extends PresenterOperations<WeatherViewInterface> {
+    interface WeatherPresenterInterface
+            extends PresenterOperations<WeatherViewInterface>, ContextView {
 
+
+        void getWeatherCurrentSync(String location);
+
+        void getWeatherForecastSync(String location);
+
+        void getWeatherCurrentASync(String location);
+
+        void getWeatherForecastASync(String location);
+
+        void displayCurrentResults(WeatherCurrentData weatherCurrentData, String error);
+
+        void displayForecastResults(WeatherForecastData weatherForecastData, String error);
 
     }
 
@@ -46,6 +61,12 @@ public interface MVP {
      */
     interface WeatherModelInterface extends ModelOperations<WeatherPresenterInterface> {
 
+        void getWeatherCurrentSync(String location);
 
+        void getWeatherForecastSync(String location);
+
+        void getWeatherCurrentASync(String location);
+
+        void getWeatherForecastASync(String location);
     }
 }

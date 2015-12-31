@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.treefrogapps.a3_weatherservice.model.WeatherModel;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherTwoWay;
-
-import java.util.List;
+import com.treefrogapps.a3_weatherservice.utils.DownloadUtils;
 
 /**
  * Weather Service which is SYNCHRONOUS - AIDL method call that returns a result
@@ -52,19 +52,26 @@ public class WeatherServiceSync extends Service {
      */
     private final WeatherTwoWay.Stub mSyncTwoWayServiceCall = new WeatherTwoWay.Stub() {
         @Override
-        public List<WeatherCurrentData> getCurrentWeatherData(String location)
+        public WeatherCurrentData getCurrentWeatherData(String location)
                 throws RemoteException {
 
-            // TODO - check weather cache,  download and parse json data, update weather cache
-            return null;
+            /**
+             * Download data for location and cast object to correct weather data type
+             */
+            return (WeatherCurrentData)
+                    DownloadUtils.weatherDataDownload(location, WeatherModel.CURRENT_WEATHER);
+
         }
 
         @Override
-        public List<WeatherForecastData> getForecastWeatherData(String location)
+        public WeatherForecastData getForecastWeatherData(String location)
                 throws RemoteException {
 
-            // TODO - check weather cache,  download and parse json data, update weather cache
-            return null;
+            /**
+             * Download data for location and cast object to correct weather data type
+             */
+            return (WeatherForecastData)
+                    DownloadUtils.weatherDataDownload(location, WeatherModel.FORECAST_WEATHER);
         }
     };
 

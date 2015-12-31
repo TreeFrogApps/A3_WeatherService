@@ -31,6 +31,11 @@ import java.util.ArrayList;
  */
 public class WeatherForecastData implements Parcelable {
 
+    // Default Constructor
+    public WeatherForecastData(){
+
+    }
+
     private static String TAG = WeatherForecastData.class.getSimpleName();
 
     /**

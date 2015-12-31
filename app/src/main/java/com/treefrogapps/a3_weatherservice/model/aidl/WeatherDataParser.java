@@ -3,27 +3,27 @@ package com.treefrogapps.a3_weatherservice.model.aidl;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.treefrogapps.a3_weatherservice.common.WeatherDataCache;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class with helper method to parse the InputStream
  */
 public class WeatherDataParser {
 
-    private Gson mGson = new Gson();
 
     private static String TAG = WeatherDataParser.class.getSimpleName();
 
 
-    public List<WeatherCurrentData> parseJsonToGsonCurrentWeather(InputStream inputStream)
+    public static WeatherCurrentData parseJsonToGsonCurrentWeather(InputStream inputStream)
             throws IOException {
 
         ArrayList<WeatherCurrentData> result = new ArrayList<>();
+        Gson gson = new Gson();
 
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
 
@@ -32,23 +32,28 @@ public class WeatherDataParser {
          * JsonReader under the hood)
          */
         WeatherCurrentData weatherCurrentData
-                = mGson.fromJson(inputStreamReader, WeatherCurrentData.class);
+                = gson.fromJson(inputStreamReader, WeatherCurrentData.class);
 
-        Log.i(TAG, "Json data : " + mGson.toJson(inputStreamReader));
+        Log.i(TAG, "Json data : " + gson.toJson(inputStreamReader));
 
         // close the reader - this will also close the input stream associated with it
         inputStreamReader.close();
 
-        result.add(0, weatherCurrentData);
+        // set a time stamp for the data
+        weatherCurrentData.setTimeStamp(System.currentTimeMillis());
 
-        return result;
+        // put weather object into concurrent hash map
+        WeatherDataCache.putCurrentHashMap(weatherCurrentData.getCity(), weatherCurrentData);
+
+        return weatherCurrentData;
     }
 
 
-    public List<WeatherForecastData> parseJsonToGsonForecastWeather(InputStream inputStream)
+    public static WeatherForecastData parseJsonToGsonForecastWeather(InputStream inputStream)
     throws IOException {
 
         ArrayList<WeatherForecastData> result = new ArrayList<>();
+        Gson gson = new Gson();
 
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
 
@@ -57,15 +62,20 @@ public class WeatherDataParser {
          * JsonReader under the hood)
          */
         WeatherForecastData weatherForecastData
-                = mGson.fromJson(inputStreamReader, WeatherForecastData.class);
+                = gson.fromJson(inputStreamReader, WeatherForecastData.class);
 
-        Log.i(TAG, "Json data : " + mGson.toJson(inputStreamReader));
+        Log.i(TAG, "Json data : " + gson.toJson(inputStreamReader));
 
         // close the reader - this will also close the input stream associated with it
         inputStreamReader.close();
 
-        result.add(0, weatherForecastData);
+        // set a time stamp for the weather data
+        weatherForecastData.setTimeStamp(System.currentTimeMillis());
 
-        return result;
+        // put weather object into concurrent hash map
+        WeatherDataCache.putForeCastHashMap(weatherForecastData
+                                        .getCity().getCityName(), weatherForecastData);
+
+        return weatherForecastData;
     }
 }

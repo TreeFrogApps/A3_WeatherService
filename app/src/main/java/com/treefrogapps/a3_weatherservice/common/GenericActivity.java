@@ -115,4 +115,13 @@ public abstract class GenericActivity<ViewInterface, Presenter extends Presenter
     public Context getAppContext() {
         return getApplicationContext();
     }
+
+    /**
+     * Method to get presenter - for use in subclasses (WeatherActivity - View Layer)
+     * when a reference to the presenter is required
+     */
+    public Presenter getPresenter() {
+
+        return mPresenter;
+    }
 }
