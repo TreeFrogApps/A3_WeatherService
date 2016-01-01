@@ -47,9 +47,9 @@ public interface MVP {
 
         void getWeatherForecastASync(String location);
 
-        void displayCurrentResults(WeatherCurrentData weatherCurrentData, String error);
+        void displayCurrentResults(WeatherCurrentData weatherCurrentData);
 
-        void displayForecastResults(WeatherForecastData weatherForecastData, String error);
+        void displayForecastResults(WeatherForecastData weatherForecastData);
 
     }
 

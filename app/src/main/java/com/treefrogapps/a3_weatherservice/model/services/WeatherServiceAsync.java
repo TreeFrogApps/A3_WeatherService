@@ -5,12 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
+import com.treefrogapps.a3_weatherservice.model.WeatherModel;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherOneWayReply;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherOneWayRequest;
+import com.treefrogapps.a3_weatherservice.utils.DownloadUtils;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,11 +25,15 @@ import java.util.concurrent.Executors;
  */
 public class WeatherServiceAsync extends Service {
 
+    private static String TAG = WeatherServiceAsync.class.getSimpleName();
+
     private ExecutorService mExecutorService;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Log.d(TAG, "onCreate Called");
 
         /**
          * Create Thread Pool, otherwise one way aidl calls (Async) are done on a single thread
@@ -62,21 +70,25 @@ public class WeatherServiceAsync extends Service {
      */
     private final WeatherOneWayRequest.Stub mASyncOneWayServiceRequest = new WeatherOneWayRequest.Stub() {
 
-
         @Override
         public void getCurrentWeatherRequest(String location, final WeatherOneWayReply resultsCallback)
                 throws RemoteException {
+
+            final String city = location;
 
             final Runnable currentWeatherRunnable = new Runnable() {
                 @Override
                 public void run() {
 
-                    // TODO - add utils for downloading and returning a list to the calling object
-                    // TODO - check weather cache,  download and parse json data, update weather cache
-
-                    WeatherCurrentData weatherCurrentData = new WeatherCurrentData();
+                    WeatherCurrentData weatherCurrentData = null;
                     String error = null;
 
+                    try {
+                        weatherCurrentData = (WeatherCurrentData)
+                                DownloadUtils.weatherDataDownload(city, WeatherModel.CURRENT_WEATHER);
+                    } catch (IOException e) {
+                        error = e.getMessage();
+                    }
 
                     /**
                      * Send either string with error in for debugging, or if successful send back
@@ -87,15 +99,18 @@ public class WeatherServiceAsync extends Service {
                         if (error !=null) {
 
                             resultsCallback.sendError(error);
+
                         } else {
+
+                            Log.d(TAG, "New Current data for " + city +
+                                    "added to Concurrent HashMap");
+
                             resultsCallback.sendCurrentResults(weatherCurrentData);
 
                         }
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             };
 
@@ -106,19 +121,21 @@ public class WeatherServiceAsync extends Service {
         public void getForecastWeatherRequest(String location, final WeatherOneWayReply resultsCallback)
                 throws RemoteException {
 
+            final String city = location;
+
             final Runnable forecastWeatherRunnable = new Runnable() {
                 @Override
                 public void run() {
 
-                    // TODO - add utils for downloading and returning a list to the calling object
-                    // TODO - check weather cache,  download and parse json data, update weather cache
-
-
-                    WeatherForecastData weatherForecastData = new WeatherForecastData();
+                    WeatherForecastData weatherForecastData = null;
                     String error = null;
 
-
-
+                    try {
+                        weatherForecastData = (WeatherForecastData)
+                                DownloadUtils.weatherDataDownload(city, WeatherModel.CURRENT_WEATHER);
+                    } catch (IOException e) {
+                        error = e.getMessage();
+                    }
 
                     /**
                      * Send either string with error in for debugging, or if successful send back
@@ -129,7 +146,12 @@ public class WeatherServiceAsync extends Service {
                         if (error !=null) {
 
                             resultsCallback.sendError(error);
+
                         } else {
+
+                            Log.d(TAG, "New Current data for " + city +
+                                    "added to Concurrent HashMap");
+
                             resultsCallback.sendForecastResults(weatherForecastData);
 
                         }
@@ -152,6 +174,7 @@ public class WeatherServiceAsync extends Service {
         // Shutdown the executor when the service is being destroyed
         mExecutorService.shutdownNow();
 
+        Log.d(TAG, "Shutting down");
     }
 
 }

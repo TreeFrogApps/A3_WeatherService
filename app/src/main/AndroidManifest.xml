@@ -27,7 +27,7 @@
             android:process=":WeatherAsyncService"/>
 
         <service android:name=".model.services.WeatherServiceSync"
-            android:process="WeatherSyncService"/>
+            android:process=":WeatherSyncService"/>
 
 
     </application>

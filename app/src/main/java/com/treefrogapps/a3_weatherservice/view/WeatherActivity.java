@@ -25,13 +25,13 @@ public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, W
          * WeatherActivity & Presenter Class passed in.
          */
         super.onCreate(this, WeatherPresenter.class);
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        // TODO - implement the trail through other layers cleaning up
         // App being destroyed, notify other layer to perform
         // any necessary clean up operations (unbind service)
         if (isFinishing()) getPresenter().onDestroy();

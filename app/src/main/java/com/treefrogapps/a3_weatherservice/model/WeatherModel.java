@@ -1,7 +1,7 @@
 package com.treefrogapps.a3_weatherservice.model;
 
 import android.content.ComponentName;
-import android.content.Intent;
+import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.IBinder;
@@ -56,22 +56,24 @@ public class WeatherModel implements MVP.WeatherModelInterface {
 
     }
 
-    public void bindServices(){
+    public void bindServices() {
 
         Log.d(TAG, "Attempting to Bind Services");
 
-        Intent intentAsync = WeatherServiceAsync.makeIntent(mPresenterInterface.get().getAppContext());
-        mPresenterInterface.get().getAppContext().startService(intentAsync);
+        mPresenterInterface.get().getAppContext()
+                .bindService(WeatherServiceAsync.makeIntent(mPresenterInterface.get().getAppContext())
+                        , mServiceConnectionASYNC, Context.BIND_AUTO_CREATE);
 
-        Intent intentSync = WeatherServiceSync.makeIntent(mPresenterInterface.get().getActivityContext());
-        mPresenterInterface.get().getAppContext().startService(intentSync);
+        mPresenterInterface.get().getAppContext()
+                .bindService(WeatherServiceSync.makeIntent(mPresenterInterface.get().getActivityContext())
+                        , mServiceConnectionSYNC, Context.BIND_AUTO_CREATE);
     }
 
 
     /**
      * Service Connections Called back after attempt to startServices() is made
      * to each Aidl service interface.
-     *
+     * <p/>
      * This could be done in a generic service connection class
      * to keep things tidy and more clean
      */
@@ -126,6 +128,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
     /**
      * Method that either returns cached data or uses the IBinder reference to download new
      * CURRENT weather data if either the cached time limit is up, or it hasn't been downloaded before
+     *
      * @param location String - requested weather location
      */
     @Override
@@ -134,50 +137,51 @@ public class WeatherModel implements MVP.WeatherModelInterface {
         // Check WeatherData Cache
         WeatherCurrentData weatherCurrentData = WeatherDataCache.currentWeatherLookUp(location);
 
-        if (weatherCurrentData != null){
+        if (weatherCurrentData != null) {
 
             Log.d(TAG, "Current data for " + location +
                     "Timeout not expired, cached data retrieved");
 
-            mPresenterInterface.get().displayCurrentResults(weatherCurrentData, null);
+            mPresenterInterface.get().displayCurrentResults(weatherCurrentData);
 
         } else {
 
             /**
              * Anonymous AsyncTask to use the IBinder Aidl reference to the WeatherServiceSync
              */
-                new AsyncTask<String, Void, WeatherCurrentData>() {
+            new AsyncTask<String, Void, WeatherCurrentData>() {
 
-                    private String location;
-                    @Override
-                    protected WeatherCurrentData doInBackground(String... params) {
+                private String location;
 
-                        location = params[0];
-                        try {
+                @Override
+                protected WeatherCurrentData doInBackground(String... params) {
 
-                            /**
-                             * Call to the synchronous service
-                             */
-                            return mWeatherTwoWaySYNC.getCurrentWeatherData(location);
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
+                    location = params[0];
+                    try {
+
+                        /**
+                         * Call to the synchronous service
+                         */
+                        return mWeatherTwoWaySYNC.getCurrentWeatherData(location);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
                     }
+                    return null;
+                }
 
-                    @Override
-                    protected void onPostExecute(WeatherCurrentData weatherCurrentData) {
-                        super.onPostExecute(weatherCurrentData);
+                @Override
+                protected void onPostExecute(WeatherCurrentData weatherCurrentData) {
+                    super.onPostExecute(weatherCurrentData);
 
-                        if (weatherCurrentData !=null){
+                    if (weatherCurrentData != null) {
 
-                            Log.d(TAG, "New Current data for " + location +
-                                    "added to Concurrent HashMap");
+                        Log.d(TAG, "New Current data for " + location +
+                                "added to Concurrent HashMap");
 
-                            mPresenterInterface.get().displayCurrentResults(weatherCurrentData, null);
-                        }
+                        mPresenterInterface.get().displayCurrentResults(weatherCurrentData);
                     }
-                }.execute(location);
+                }
+            }.execute(location);
         }
 
     }
@@ -185,6 +189,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
     /**
      * Method that either returns cached data or uses the IBinder reference to download new
      * FORECAST weather data if either the cached time limit is up, or it hasn't been downloaded before
+     *
      * @param location String - requested weather location
      */
     @Override
@@ -193,12 +198,12 @@ public class WeatherModel implements MVP.WeatherModelInterface {
         // Check WeatherData Cache
         WeatherForecastData weatherForecastData = WeatherDataCache.forecastWeatherLookUp(location);
 
-        if (weatherForecastData != null){
+        if (weatherForecastData != null) {
 
             Log.d(TAG, "Forecast data for " + location +
                     "Timeout not expired, cached data retrieved");
 
-            mPresenterInterface.get().displayForecastResults(weatherForecastData, null);
+            mPresenterInterface.get().displayForecastResults(weatherForecastData);
 
         } else {
 
@@ -208,6 +213,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
             new AsyncTask<String, Void, WeatherForecastData>() {
 
                 private String location;
+
                 @Override
                 protected WeatherForecastData doInBackground(String... params) {
 
@@ -228,48 +234,97 @@ public class WeatherModel implements MVP.WeatherModelInterface {
                 protected void onPostExecute(WeatherForecastData weatherForecastData) {
                     super.onPostExecute(weatherForecastData);
 
-                    if (weatherForecastData !=null){
+                    if (weatherForecastData != null) {
 
                         Log.d(TAG, "New Forecast data for " + location +
                                 "added to Concurrent HashMap");
 
-                        mPresenterInterface.get().displayForecastResults(weatherForecastData, null);
+                        mPresenterInterface.get().displayForecastResults(weatherForecastData);
                     }
                 }
             }.execute(location);
         }
     }
 
+
     @Override
     public void getWeatherCurrentASync(String location) {
 
+        // Check WeatherData Cache
+        WeatherCurrentData weatherCurrentData = WeatherDataCache.currentWeatherLookUp(location);
+
+        if (weatherCurrentData != null) {
+
+            Log.d(TAG, "Forecast data for " + location +
+                    "Timeout not expired, cached data retrieved");
+
+            mPresenterInterface.get().displayCurrentResults(weatherCurrentData);
+
+        } else {
+
+            try {
+
+                mWeatherOneWayRequestASYNC.getCurrentWeatherRequest(location,
+                        mWeatherOneWayReplyCallBack);
+
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 
     @Override
     public void getWeatherForecastASync(String location) {
 
+        // Check WeatherData Cache
+        WeatherForecastData weatherForecastData = WeatherDataCache.forecastWeatherLookUp(location);
+
+        if (weatherForecastData != null) {
+
+            Log.d(TAG, "Forecast data for " + location +
+                    "Timeout not expired, cached data retrieved");
+
+            mPresenterInterface.get().displayForecastResults(weatherForecastData);
+
+        } else {
+
+            try {
+
+                mWeatherOneWayRequestASYNC.getForecastWeatherRequest(location,
+                        mWeatherOneWayReplyCallBack);
+
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 
     /**
      * Aidl one way Callback sent with one way request (observer pattern?)
      */
-
     private WeatherOneWayReply.Stub mWeatherOneWayReplyCallBack = new WeatherOneWayReply.Stub() {
         @Override
         public void sendCurrentResults(WeatherCurrentData weatherCurrentData)
                 throws RemoteException {
 
+            // Send results back to the Presenter Layer
+            mPresenterInterface.get().displayCurrentResults(weatherCurrentData);
         }
 
         @Override
         public void sendForecastResults(WeatherForecastData weatherForecastData)
                 throws RemoteException {
 
+            // Send results back the the Presenter Layer
+            mPresenterInterface.get().displayForecastResults(weatherForecastData);
         }
 
         @Override
         public void sendError(String error) throws RemoteException {
 
+            Log.e(TAG, "Error handling Async request : " + error);
         }
     };
 
@@ -277,18 +332,24 @@ public class WeatherModel implements MVP.WeatherModelInterface {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
 
-    public void unBindServices(){
+
+    public void unBindServices() {
 
         Log.d(TAG, "Unbinding Services");
 
-        mPresenterInterface.get().getAppContext().unbindService(mServiceConnectionASYNC);
-        mPresenterInterface.get().getAppContext().unbindService(mServiceConnectionSYNC);
+        if (mServiceConnectionASYNC != null){
+            mPresenterInterface.get().getAppContext().unbindService(mServiceConnectionASYNC);
+        }
+
+        if (mServiceConnectionSYNC != null) {
+            mPresenterInterface.get().getAppContext().unbindService(mServiceConnectionSYNC);
+        }
     }
 
     @Override
     public void onDestroy(boolean changingConfigurations) {
 
-        if (!changingConfigurations){
+        if (!changingConfigurations) {
             unBindServices();
 
         } else {

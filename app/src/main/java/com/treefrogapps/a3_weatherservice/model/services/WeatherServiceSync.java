@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.treefrogapps.a3_weatherservice.model.WeatherModel;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
@@ -12,15 +13,21 @@ import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherTwoWay;
 import com.treefrogapps.a3_weatherservice.utils.DownloadUtils;
 
+import java.io.IOException;
+
 /**
  * Weather Service which is SYNCHRONOUS - AIDL method call that returns a result
  * this will block the calling thread so should be performed in a AsyncTask
  */
 public class WeatherServiceSync extends Service {
 
+    private static  String TAG = WeatherServiceSync.class.getSimpleName();
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Log.d(TAG, "onCreate Called");
     }
 
     /**
@@ -58,9 +65,14 @@ public class WeatherServiceSync extends Service {
             /**
              * Download data for location and cast object to correct weather data type
              */
-            return (WeatherCurrentData)
-                    DownloadUtils.weatherDataDownload(location, WeatherModel.CURRENT_WEATHER);
+            try {
+                return (WeatherCurrentData)
+                        DownloadUtils.weatherDataDownload(location, WeatherModel.CURRENT_WEATHER);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
+            return null;
         }
 
         @Override
@@ -70,8 +82,14 @@ public class WeatherServiceSync extends Service {
             /**
              * Download data for location and cast object to correct weather data type
              */
-            return (WeatherForecastData)
-                    DownloadUtils.weatherDataDownload(location, WeatherModel.FORECAST_WEATHER);
+            try {
+                return (WeatherForecastData)
+                        DownloadUtils.weatherDataDownload(location, WeatherModel.FORECAST_WEATHER);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
         }
     };
 
@@ -79,5 +97,7 @@ public class WeatherServiceSync extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        Log.d(TAG, "Shutting down");
     }
 }

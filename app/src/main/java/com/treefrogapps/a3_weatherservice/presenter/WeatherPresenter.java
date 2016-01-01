@@ -52,6 +52,8 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
     @Override
     public void onConfigChange(MVP.WeatherViewInterface viewInterface) {
 
+        Log.d(TAG, "onConfigChangeCalled");
+
         mViewInterface = new WeakReference<>(viewInterface);
     }
 
@@ -71,43 +73,58 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
     }
 
 
-
+    /**
+     * Methods (4) for retrieving Weather Data from the Model layer
+     * results are posted back to the Presenter Layer (displayResults)
+     * @param location location to get the weather for
+     */
 
     @Override
     public void getWeatherCurrentSync(String location) {
 
+        mWeatherModel.getWeatherCurrentSync(location);
     }
 
     @Override
     public void getWeatherForecastSync(String location) {
 
+        mWeatherModel.getWeatherForecastSync(location);
     }
 
     @Override
     public void getWeatherCurrentASync(String location) {
 
+        mWeatherModel.getWeatherCurrentASync(location);
     }
 
     @Override
     public void getWeatherForecastASync(String location) {
 
+        mWeatherModel.getWeatherForecastASync(location);
     }
 
 
-
+    /**
+     * Methods to display error or weather data results back to the View Layer
+     * Must be run on the UI thread to handle results from ASYNC service
+     * @param weatherCurrentData weather data
+     */
     @Override
-    public void displayCurrentResults(WeatherCurrentData weatherCurrentData, String error) {
+    public void displayCurrentResults(WeatherCurrentData weatherCurrentData) {
 
     }
 
     @Override
-    public void displayForecastResults(WeatherForecastData weatherForecastData, String error) {
+    public void displayForecastResults(WeatherForecastData weatherForecastData) {
 
     }
 
 
     @Override
     public void onDestroy() {
+
+        // App is shutting down close down services connections
+        mWeatherModel.onDestroy(false);
 
     }
 }

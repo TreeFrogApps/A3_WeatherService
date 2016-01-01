@@ -90,14 +90,14 @@ public class WeatherDataCache {
     public static void putCurrentHashMap(String location,
                                          WeatherCurrentData weatherCurrentData) {
 
-        weatherCurrentHashMap.put(location, weatherCurrentData);
+        weatherCurrentHashMap.putIfAbsent(location, weatherCurrentData);
     }
 
 
     public static void putForeCastHashMap(String location,
                                           WeatherForecastData weatherForecastData) {
 
-        weatherForecastHashMap.put(location, weatherForecastData);
+        weatherForecastHashMap.putIfAbsent(location, weatherForecastData);
     }
 
 }
