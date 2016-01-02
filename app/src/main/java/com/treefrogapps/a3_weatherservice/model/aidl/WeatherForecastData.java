@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 public class WeatherForecastData implements Parcelable {
 
     // Default Constructor
-    public WeatherForecastData(){
+    public WeatherForecastData() {
 
     }
 
@@ -42,13 +43,22 @@ public class WeatherForecastData implements Parcelable {
      * Time stamp to be added after json has been parsed using gson
      * Time stamp is first into parcel in, an first out
      */
+
+    @Expose(serialize = false, deserialize = false)
     private long mTimeStamp;
 
-    public long getTimeStamp(){
+    @Expose(serialize = false, deserialize = false)
+    private int mWeatherListSize;
+
+    @Expose(serialize = false, deserialize = false)
+    private ArrayList<CurrentWeather> mCurrentWeatherList = new ArrayList<>();
+
+
+    public long getTimeStamp() {
         return this.mTimeStamp;
     }
 
-    public void setTimeStamp(long timeStamp){
+    public void setTimeStamp(long timeStamp) {
         this.mTimeStamp = timeStamp;
     }
 
@@ -61,9 +71,6 @@ public class WeatherForecastData implements Parcelable {
 
     @SerializedName("list")
     private ArrayList<WeatherList> mWeatherLists = new ArrayList<>();
-
-    // used in Parcelable constructor
-    private ArrayList<CurrentWeather> mCurrentWeather = new ArrayList<>();
 
     /**
      * Getter methods for top level objects/primitives
@@ -79,7 +86,6 @@ public class WeatherForecastData implements Parcelable {
     public ArrayList<WeatherList> getWeatherLists() {
         return mWeatherLists;
     }
-
 
     public static class City {
 
@@ -436,11 +442,19 @@ public class WeatherForecastData implements Parcelable {
 
         mTimeStamp = in.readLong();
 
-        // ** ADD CURRENT WEATHER OBJECT FIRST AFTER TIMESTAMP **
-        mCurrentWeather.add(new CurrentWeather(in.readInt(),
-                in.readString(),
-                in.readString(),
-                in.readString()));
+        /**
+         * Get the 3 hour forecast weather forecasts as a Current Weather Array list,
+         * we knows its size as we stored the size of the int.
+         */
+        mWeatherListSize = in.readInt();
+
+        for (int i = 0; i < mWeatherListSize; i++) {
+
+            mCurrentWeatherList.add(new CurrentWeather(in.readInt(),
+                    in.readString(),
+                    in.readString(),
+                    in.readString()));
+        }
 
         mCity = new City(in.readInt(),
                 in.readString(),
@@ -450,21 +464,38 @@ public class WeatherForecastData implements Parcelable {
 
         mCode = in.readString();
 
-        mWeatherLists.add(new WeatherList(in.readLong(),
-                new MainInfo(in.readDouble(),
-                        in.readDouble(),
-                        in.readDouble(),
-                        in.readDouble(),
-                        in.readDouble(),
-                        in.readDouble(),
-                        in.readInt()),
-                mCurrentWeather,
-                new Clouds(in.readInt()),
-                new Wind(in.readDouble(),
-                        in.readDouble()),
-                new Rain(in.readDouble()),
-                new Snow(in.readDouble()),
-                in.readString()));
+        /**
+         * Get the 3 hour forecast weather forecasts as a Weather Array list,
+         * we knows its size as we stored the size of the int.
+         */
+        for (int i = 0; i < mWeatherListSize; i++) {
+
+            /**
+             * Need to create a NEW array list containing 1 entry
+             * for the Current Weather - use mCurrentWeatherList
+             * already generated for the data to go into the array
+             */
+            CurrentWeather currentWeather = mCurrentWeatherList.get(i);
+
+            ArrayList<CurrentWeather> currentWeatherAsList = new ArrayList<>();
+            currentWeatherAsList.add(currentWeather);
+
+            mWeatherLists.add(new WeatherList(in.readLong(),
+                    new MainInfo(in.readDouble(),
+                            in.readDouble(),
+                            in.readDouble(),
+                            in.readDouble(),
+                            in.readDouble(),
+                            in.readDouble(),
+                            in.readInt()),
+                    currentWeatherAsList,
+                    new Clouds(in.readInt()),
+                    new Wind(in.readDouble(),
+                            in.readDouble()),
+                    new Rain(in.readDouble()),
+                    new Snow(in.readDouble()),
+                    in.readString()));
+        }
     }
 
     @Override
@@ -480,11 +511,22 @@ public class WeatherForecastData implements Parcelable {
 
         dest.writeLong(mTimeStamp);
 
-        // ** ADD CURRENT WEATHER OBJECT FIRST AFTER TIMESTAMP**
-        dest.writeInt(mCurrentWeather.get(0).getWeatherCode());
-        dest.writeString(mCurrentWeather.get(0).getWeatherType());
-        dest.writeString(mCurrentWeather.get(0).getWeatherDescription());
-        dest.writeString(mCurrentWeather.get(0).getIcon());
+        /**
+         * Get the size of the WeatherList ArrayList, so when reading back in
+         * we know the size of the array to create.
+         *
+         * Iterate over the objects
+         */
+        dest.writeInt(getWeatherLists().size());
+
+        // ** ADD CURRENT WEATHER OBJECTS FIRST AFTER TIMESTAMP**
+        for (int i = 0; i < getWeatherLists().size(); i++) {
+
+            dest.writeInt(getWeatherLists().get(i).getCurrentWeather().get(0).getWeatherCode());
+            dest.writeString(getWeatherLists().get(i).getCurrentWeather().get(0).getWeatherType());
+            dest.writeString(getWeatherLists().get(i).getCurrentWeather().get(0).getWeatherDescription());
+            dest.writeString(getWeatherLists().get(i).getCurrentWeather().get(0).getIcon());
+        }
 
         dest.writeInt(mCity.getCityId());
         dest.writeString(mCity.getCityName());
@@ -494,20 +536,31 @@ public class WeatherForecastData implements Parcelable {
 
         dest.writeString(mCode);
 
-        dest.writeLong(mWeatherLists.get(0).getDateTime());
-        dest.writeDouble(mWeatherLists.get(0).getMainInfo().getTemp());
-        dest.writeDouble(mWeatherLists.get(0).getMainInfo().getTempMin());
-        dest.writeDouble(mWeatherLists.get(0).getMainInfo().getTempMax());
-        dest.writeDouble(mWeatherLists.get(0).getMainInfo().getPressure());
-        dest.writeDouble(mWeatherLists.get(0).getMainInfo().getSeaLevel());
-        dest.writeDouble(mWeatherLists.get(0).getMainInfo().getGroundLevel());
-        dest.writeInt(mWeatherLists.get(0).getMainInfo().getHumidity());
-        dest.writeInt(mWeatherLists.get(0).getClouds().getCloudCover());
-        dest.writeDouble(mWeatherLists.get(0).getWind().getWindSpeed());
-        dest.writeDouble(mWeatherLists.get(0).getWind().getDegrees());
-        dest.writeDouble(mWeatherLists.get(0).getRain().getRain3hr());
-        dest.writeDouble(mWeatherLists.get(0).getSnow().getSnow3hr());
-        dest.writeString(mWeatherLists.get(0).getDateAsString());
+        for (int i = 0; i < getWeatherLists().size(); i++) {
+
+            dest.writeLong(mWeatherLists.get(i).getDateTime());
+            dest.writeDouble(mWeatherLists.get(i).getMainInfo().getTemp());
+            dest.writeDouble(mWeatherLists.get(i).getMainInfo().getTempMin());
+            dest.writeDouble(mWeatherLists.get(i).getMainInfo().getTempMax());
+            dest.writeDouble(mWeatherLists.get(i).getMainInfo().getPressure());
+            dest.writeDouble(mWeatherLists.get(i).getMainInfo().getSeaLevel());
+            dest.writeDouble(mWeatherLists.get(i).getMainInfo().getGroundLevel());
+            dest.writeInt(mWeatherLists.get(i).getMainInfo().getHumidity());
+            dest.writeInt(mWeatherLists.get(i).getClouds().getCloudCover());
+            dest.writeDouble(mWeatherLists.get(i).getWind().getWindSpeed());
+            dest.writeDouble(mWeatherLists.get(i).getWind().getDegrees());
+            if (mWeatherLists.get(i).getRain() != null) {
+                dest.writeDouble(mWeatherLists.get(i).getRain().getRain3hr());
+            } else {
+                dest.writeDouble(0.0);
+            }
+            if (mWeatherLists.get(i).getSnow() != null) {
+                dest.writeDouble(mWeatherLists.get(i).getSnow().getSnow3hr());
+            } else {
+                dest.writeDouble(0.0);
+            }
+            dest.writeString(mWeatherLists.get(i).getDateAsString());
+        }
     }
 
 
@@ -527,6 +580,4 @@ public class WeatherForecastData implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-
 }

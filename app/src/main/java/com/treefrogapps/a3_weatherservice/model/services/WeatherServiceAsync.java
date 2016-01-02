@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.treefrogapps.a3_weatherservice.common.WeatherDataCache;
 import com.treefrogapps.a3_weatherservice.model.WeatherModel;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
@@ -43,17 +44,18 @@ public class WeatherServiceAsync extends Service {
 
     /**
      * Static factory method for making an Explicit Intent - used when binding to the service
+     *
      * @param context supplied context
      * @return new explicit intent
      */
-    public static Intent makeIntent(Context context){
+    public static Intent makeIntent(Context context) {
 
         return new Intent(context, WeatherServiceAsync.class);
     }
 
     /**
      * Binder object sent back to the callback ServiceConnection.
-     *
+     * <p/>
      * The WeatherOneWayRequest.Stub extends a Binder Class which implements IBinder
      * so the returned IBinder is cast from WeatherOneWayRequest.Stub
      */
@@ -64,7 +66,7 @@ public class WeatherServiceAsync extends Service {
 
     /**
      * System generated Class : app/build/generated/source/aidl/debug/com/treefrogapps/a3_weatherservice/model/aidl
-     *
+     * <p/>
      * static abstract inner class 'Stub' which has the defined methods in the corresponding aidl file
      * which MUST be overridden.  This runs in a separate thread
      */
@@ -96,14 +98,16 @@ public class WeatherServiceAsync extends Service {
                      */
                     try {
 
-                        if (error !=null) {
+                        if (error != null) {
 
                             resultsCallback.sendError(error);
 
                         } else {
 
-                            Log.d(TAG, "New Current data for " + city +
-                                    "added to Concurrent HashMap");
+                            Log.d(TAG, "New Current data for " + city.toUpperCase() +
+                                    " added to Concurrent HashMap");
+
+                            WeatherDataCache.putCurrentHashMap(city, weatherCurrentData);
 
                             resultsCallback.sendCurrentResults(weatherCurrentData);
 
@@ -132,7 +136,7 @@ public class WeatherServiceAsync extends Service {
 
                     try {
                         weatherForecastData = (WeatherForecastData)
-                                DownloadUtils.weatherDataDownload(city, WeatherModel.CURRENT_WEATHER);
+                                DownloadUtils.weatherDataDownload(city, WeatherModel.FORECAST_WEATHER);
                     } catch (IOException e) {
                         error = e.getMessage();
                     }
@@ -143,14 +147,16 @@ public class WeatherServiceAsync extends Service {
                      */
                     try {
 
-                        if (error !=null) {
+                        if (error != null) {
 
                             resultsCallback.sendError(error);
 
                         } else {
 
-                            Log.d(TAG, "New Current data for " + city +
-                                    "added to Concurrent HashMap");
+                            Log.d(TAG, "New Forecast data for " + city.toUpperCase() +
+                                    " added to Concurrent HashMap");
+
+                            WeatherDataCache.putForeCastHashMap(city, weatherForecastData);
 
                             resultsCallback.sendForecastResults(weatherForecastData);
 

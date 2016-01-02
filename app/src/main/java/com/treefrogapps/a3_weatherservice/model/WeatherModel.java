@@ -31,6 +31,9 @@ public class WeatherModel implements MVP.WeatherModelInterface {
     public static int CURRENT_WEATHER = 10;
     public static int FORECAST_WEATHER = 20;
 
+    private static String CACHED_DATA = "Cached Weather data retrieved";
+    private static String NEW_DATA = "New Weather data downloaded";
+
     private WeakReference<MVP.WeatherPresenterInterface> mPresenterInterface;
 
     /**
@@ -126,7 +129,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
      */
 
     /**
-     * Method that either returns cached data or uses the IBinder reference to download new
+     * Method that either returns cached data or uses the IBinder (two way) reference to download new
      * CURRENT weather data if either the cached time limit is up, or it hasn't been downloaded before
      *
      * @param location String - requested weather location
@@ -140,9 +143,9 @@ public class WeatherModel implements MVP.WeatherModelInterface {
         if (weatherCurrentData != null) {
 
             Log.d(TAG, "Current data for " + location +
-                    "Timeout not expired, cached data retrieved");
+                    " Timeout not expired, cached data retrieved");
 
-            mPresenterInterface.get().displayCurrentResults(weatherCurrentData);
+            mPresenterInterface.get().displayCurrentResults(weatherCurrentData, CACHED_DATA);
 
         } else {
 
@@ -163,6 +166,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
                          * Call to the synchronous service
                          */
                         return mWeatherTwoWaySYNC.getCurrentWeatherData(location);
+
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
@@ -175,10 +179,12 @@ public class WeatherModel implements MVP.WeatherModelInterface {
 
                     if (weatherCurrentData != null) {
 
-                        Log.d(TAG, "New Current data for " + location +
-                                "added to Concurrent HashMap");
+                        Log.d(TAG, "New Current data for " + location.toUpperCase() +
+                                " added to Concurrent HashMap");
 
-                        mPresenterInterface.get().displayCurrentResults(weatherCurrentData);
+                        WeatherDataCache.putCurrentHashMap(location, weatherCurrentData);
+
+                        mPresenterInterface.get().displayCurrentResults(weatherCurrentData, NEW_DATA);
                     }
                 }
             }.execute(location);
@@ -187,7 +193,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
     }
 
     /**
-     * Method that either returns cached data or uses the IBinder reference to download new
+     * SYNCHRONOUS Method that either returns cached data or uses the IBinder (two way) reference to download new
      * FORECAST weather data if either the cached time limit is up, or it hasn't been downloaded before
      *
      * @param location String - requested weather location
@@ -201,9 +207,9 @@ public class WeatherModel implements MVP.WeatherModelInterface {
         if (weatherForecastData != null) {
 
             Log.d(TAG, "Forecast data for " + location +
-                    "Timeout not expired, cached data retrieved");
+                    " Timeout not expired, cached data retrieved");
 
-            mPresenterInterface.get().displayForecastResults(weatherForecastData);
+            mPresenterInterface.get().displayForecastResults(weatherForecastData, CACHED_DATA);
 
         } else {
 
@@ -224,6 +230,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
                          * Call to the synchronous service
                          */
                         return mWeatherTwoWaySYNC.getForecastWeatherData(location);
+
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
@@ -236,17 +243,24 @@ public class WeatherModel implements MVP.WeatherModelInterface {
 
                     if (weatherForecastData != null) {
 
-                        Log.d(TAG, "New Forecast data for " + location +
-                                "added to Concurrent HashMap");
+                        Log.d(TAG, "New Forecast data for " + location.toUpperCase() +
+                                " added to Concurrent HashMap");
 
-                        mPresenterInterface.get().displayForecastResults(weatherForecastData);
+                        WeatherDataCache.putForeCastHashMap(location, weatherForecastData);
+
+                        mPresenterInterface.get().displayForecastResults(weatherForecastData, NEW_DATA);
                     }
                 }
             }.execute(location);
         }
     }
 
-
+    /**
+     * ASYNCHRONOUS Method that either returns cached data or uses the IBinder (one way) reference to download new
+     * FORECAST weather data if either the cached time limit is up, or it hasn't been downloaded before
+     *
+     * @param location String - requested weather location
+     */
     @Override
     public void getWeatherCurrentASync(String location) {
 
@@ -255,10 +269,10 @@ public class WeatherModel implements MVP.WeatherModelInterface {
 
         if (weatherCurrentData != null) {
 
-            Log.d(TAG, "Forecast data for " + location +
-                    "Timeout not expired, cached data retrieved");
+            Log.d(TAG, "Current data for " + location +
+                    " Timeout not expired, cached data retrieved");
 
-            mPresenterInterface.get().displayCurrentResults(weatherCurrentData);
+            mPresenterInterface.get().displayCurrentResults(weatherCurrentData, CACHED_DATA);
 
         } else {
 
@@ -273,7 +287,12 @@ public class WeatherModel implements MVP.WeatherModelInterface {
         }
     }
 
-
+    /**
+     * ASYNCHRONOUS Method that either returns cached data or uses the IBinder (one way) reference to download new
+     * FORECAST weather data if either the cached time limit is up, or it hasn't been downloaded before
+     *
+     * @param location String - requested weather location
+     */
     @Override
     public void getWeatherForecastASync(String location) {
 
@@ -283,9 +302,9 @@ public class WeatherModel implements MVP.WeatherModelInterface {
         if (weatherForecastData != null) {
 
             Log.d(TAG, "Forecast data for " + location +
-                    "Timeout not expired, cached data retrieved");
+                    " Timeout not expired, cached data retrieved");
 
-            mPresenterInterface.get().displayForecastResults(weatherForecastData);
+            mPresenterInterface.get().displayForecastResults(weatherForecastData, CACHED_DATA);
 
         } else {
 
@@ -310,7 +329,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
                 throws RemoteException {
 
             // Send results back to the Presenter Layer
-            mPresenterInterface.get().displayCurrentResults(weatherCurrentData);
+            mPresenterInterface.get().displayCurrentResults(weatherCurrentData, NEW_DATA);
         }
 
         @Override
@@ -318,7 +337,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
                 throws RemoteException {
 
             // Send results back the the Presenter Layer
-            mPresenterInterface.get().displayForecastResults(weatherForecastData);
+            mPresenterInterface.get().displayForecastResults(weatherForecastData, NEW_DATA);
         }
 
         @Override
@@ -337,7 +356,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
 
         Log.d(TAG, "Unbinding Services");
 
-        if (mServiceConnectionASYNC != null){
+        if (mServiceConnectionASYNC != null) {
             mPresenterInterface.get().getAppContext().unbindService(mServiceConnectionASYNC);
         }
 

@@ -25,7 +25,6 @@ public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, W
          * WeatherActivity & Presenter Class passed in.
          */
         super.onCreate(this, WeatherPresenter.class);
-
     }
 
     @Override
@@ -37,4 +36,6 @@ public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, W
         if (isFinishing()) getPresenter().onDestroy();
 
     }
+
+
 }

@@ -59,7 +59,8 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
 
     /**
      * Methods for gaining contexts from the WeatherActivity, which extends
-     * Generic Activity which Implementes this interface along with the Presenter interface
+     * Generic Activity which Implements this interface along with the Presenter interface
+     *
      * @return a Context
      */
     @Override
@@ -76,6 +77,7 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
     /**
      * Methods (4) for retrieving Weather Data from the Model layer
      * results are posted back to the Presenter Layer (displayResults)
+     *
      * @param location location to get the weather for
      */
 
@@ -107,15 +109,21 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
     /**
      * Methods to display error or weather data results back to the View Layer
      * Must be run on the UI thread to handle results from ASYNC service
+     *
      * @param weatherCurrentData weather data
      */
     @Override
-    public void displayCurrentResults(WeatherCurrentData weatherCurrentData) {
+    public void displayCurrentResults(WeatherCurrentData weatherCurrentData, String message) {
+
+        Log.d(TAG, "Data Retrieved for ; " + weatherCurrentData.getCity());
 
     }
 
     @Override
-    public void displayForecastResults(WeatherForecastData weatherForecastData) {
+    public void displayForecastResults(WeatherForecastData weatherForecastData, String message) {
+
+        Log.d(TAG, "Data Retrieved for ; " + weatherForecastData.getCity());
+
 
     }
 

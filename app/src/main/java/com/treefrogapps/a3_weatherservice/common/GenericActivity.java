@@ -75,7 +75,7 @@ public abstract class GenericActivity<ViewInterface, Presenter extends Presenter
 
             mPresenter.onCreate(viewInterface);
 
-        } catch (InstantiationException e ) {
+        } catch (InstantiationException e) {
             Log.e(TAG, "Instantiation Exception " + e);
         } catch (IllegalAccessException e) {
             Log.e(TAG, "Illegal Access Exception  " + e);

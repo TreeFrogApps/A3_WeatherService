@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -13,26 +14,26 @@ import java.util.ArrayList;
  * returned json data. Extends the Parcelable interface so we can 'Parcel' across from service
  * to App (using aidl it abstracts this away, however this is required as under hood it still
  * crosses processes which can serialise/de-serialise parcelable data).
- *
+ * <p/>
  * Uses Gson @SerializedName annotations to de-serialise json data into
  * Java primitive types and objects.
- *
+ * <p/>
  * json link & typical data :
- *
+ * <p/>
  * http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=d013bcc0366f96630c0558393113cd8b
- *
+ * <p/>
  * {"coord":{"lon":-0.13,"lat":51.51},"weather":[{"id":500,"main":"Rain","description":
  * "light rain","icon":"10n"}],"base":"stations","main":{"temp":284.81,"pressure":1012,
  * "humidity":81,"temp_min":283.15,"temp_max":286.48},"visibility":10000,"wind":{"speed":4.6,
  * "deg":170},"clouds":{"all":90},"dt":1451344865,"sys":{"type":1,"id":5078,"country":"GB",
  * "sunrise":1451289970,"sunset":1451318323},"id":2643743,"name":"London","cod":200}
- *
+ * <p/>
  * item definitions http://openweathermap.org/weather-data#current
  */
 public class WeatherCurrentData implements Parcelable {
 
     // Default Constructor
-    public WeatherCurrentData(){
+    public WeatherCurrentData() {
 
     }
 
@@ -42,16 +43,17 @@ public class WeatherCurrentData implements Parcelable {
      * Time stamp to be added after json has been parsed using gson
      * Time stamp is first into parcel in, an first out
      */
+
+    @Expose(serialize = false, deserialize = false)
     private long mTimeStamp;
 
-    public long getTimeStamp(){
+    public long getTimeStamp() {
         return this.mTimeStamp;
     }
 
-    public void setTimeStamp(long timeStamp){
+    public void setTimeStamp(long timeStamp) {
         this.mTimeStamp = timeStamp;
     }
-
 
 
     @SerializedName("coord")
@@ -149,7 +151,7 @@ public class WeatherCurrentData implements Parcelable {
     public static class Coordinates {
 
         // Constructor required for writing in from parcel
-        public Coordinates(double lon, double lat){
+        public Coordinates(double lon, double lat) {
 
             this.mLongitude = lon;
             this.mLatitude = lat;
@@ -160,8 +162,7 @@ public class WeatherCurrentData implements Parcelable {
 
         @SerializedName("lat")
         private double mLatitude;
-        
-        
+
 
         public double getLongitude() {
             return mLongitude;
@@ -179,7 +180,7 @@ public class WeatherCurrentData implements Parcelable {
     public static class Weather {
 
         // Constructor required for writing in from parcel
-        public Weather (int id, String weather, String description, String icon){
+        public Weather(int id, String weather, String description, String icon) {
 
             this.mWeatherId = id;
             this.mWeatherType = weather;
@@ -224,7 +225,7 @@ public class WeatherCurrentData implements Parcelable {
     public static class Main {
 
         // Constructor required for writing in from parcel
-        public Main (double temp, int pressure, int humidity, double tempMin, double tempMax) {
+        public Main(double temp, int pressure, int humidity, double tempMin, double tempMax) {
 
             this.mTemp = temp;
             this.mPressure = pressure;
@@ -277,7 +278,7 @@ public class WeatherCurrentData implements Parcelable {
     public static class Wind {
 
         // Constructor required for writing in from parcel
-        public Wind (double windSpeed, int degrees){
+        public Wind(double windSpeed, int degrees) {
 
             this.mWindSpeed = windSpeed;
             this.mDegrees = degrees;
@@ -306,7 +307,7 @@ public class WeatherCurrentData implements Parcelable {
     public static class Clouds {
 
         // Constructor required for writing in from parcel
-        public Clouds (int cloud) {
+        public Clouds(int cloud) {
 
             this.mCloudCover = cloud;
         }
@@ -327,7 +328,7 @@ public class WeatherCurrentData implements Parcelable {
     public static class CityInfo {
 
         // Constructor required for writing in from parcel
-        public CityInfo (int type, int id, String code, long sunrise, long sunset) {
+        public CityInfo(int type, int id, String code, long sunrise, long sunset) {
 
             this.mType = type;
             this.mCityId = id;
@@ -374,8 +375,6 @@ public class WeatherCurrentData implements Parcelable {
     }
 
 
-
-
     /**
      * Parcelable Implementation - A lot of this code is boilerplate code
      * where 'blanks' are filled in to complete and make sure the class gets 'parcelled'
@@ -385,7 +384,7 @@ public class WeatherCurrentData implements Parcelable {
     /**
      * Private constructor provided for the CREATOR interface, which
      * is used to de-marshal an WeatherCurrentData from the Parcel of data.
-     * <p>
+     * <p/>
      * The order of reading in variables HAS TO MATCH the order in
      * writeToParcel(Parcel, int)
      *
@@ -406,35 +405,35 @@ public class WeatherCurrentData implements Parcelable {
         mTimeStamp = in.readLong();
 
         mCoordinates = new Coordinates(in.readDouble(),
-                                       in.readDouble());
+                in.readDouble());
 
         mWeatherList.add(new Weather(in.readInt(),
-                                     in.readString(),
-                                     in.readString(),
-                                     in.readString()));
+                in.readString(),
+                in.readString(),
+                in.readString()));
 
         mBase = in.readString();
 
         mMain = new Main(in.readDouble(),
-                             in.readInt(),
-                             in.readInt(),
-                             in.readDouble(),
-                             in.readDouble());
+                in.readInt(),
+                in.readInt(),
+                in.readDouble(),
+                in.readDouble());
 
         mVisibility = in.readLong();
 
         mWind = new Wind(in.readDouble(),
-                         in.readInt());
+                in.readInt());
 
         mClouds = new Clouds(in.readInt());
 
         mDateTime = in.readLong();
 
         mCityInfo = new CityInfo(in.readInt(),
-                                 in.readInt(),
-                                 in.readString(),
-                                 in.readLong(),
-                                 in.readLong());
+                in.readInt(),
+                in.readString(),
+                in.readLong(),
+                in.readLong());
 
         mWeatherId = in.readLong();
 

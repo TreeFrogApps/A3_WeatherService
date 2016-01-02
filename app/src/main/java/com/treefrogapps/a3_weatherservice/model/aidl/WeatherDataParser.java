@@ -34,7 +34,7 @@ public class WeatherDataParser {
         WeatherCurrentData weatherCurrentData
                 = gson.fromJson(inputStreamReader, WeatherCurrentData.class);
 
-        Log.i(TAG, "Json data : " + gson.toJson(inputStreamReader));
+        Log.i(TAG, "Json data : " + gson.toJson(weatherCurrentData));
 
         // close the reader - this will also close the input stream associated with it
         inputStreamReader.close();
@@ -50,7 +50,7 @@ public class WeatherDataParser {
 
 
     public static WeatherForecastData parseJsonToGsonForecastWeather(InputStream inputStream)
-    throws IOException {
+            throws IOException {
 
         ArrayList<WeatherForecastData> result = new ArrayList<>();
         Gson gson = new Gson();
@@ -64,7 +64,7 @@ public class WeatherDataParser {
         WeatherForecastData weatherForecastData
                 = gson.fromJson(inputStreamReader, WeatherForecastData.class);
 
-        Log.i(TAG, "Json data : " + gson.toJson(inputStreamReader));
+        Log.i(TAG, "Json data : " + gson.toJson(weatherForecastData));
 
         // close the reader - this will also close the input stream associated with it
         inputStreamReader.close();
@@ -74,7 +74,7 @@ public class WeatherDataParser {
 
         // put weather object into concurrent hash map
         WeatherDataCache.putForeCastHashMap(weatherForecastData
-                                        .getCity().getCityName(), weatherForecastData);
+                .getCity().getCityName(), weatherForecastData);
 
         return weatherForecastData;
     }

@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class WeatherServiceSync extends Service {
 
-    private static  String TAG = WeatherServiceSync.class.getSimpleName();
+    private static String TAG = WeatherServiceSync.class.getSimpleName();
 
     @Override
     public void onCreate() {
@@ -32,17 +32,18 @@ public class WeatherServiceSync extends Service {
 
     /**
      * Static factory method for making an Explicit Intent - used when binding to the service
+     *
      * @param context supplied context
      * @return new explicit intent
      */
-    public static Intent makeIntent (Context context){
+    public static Intent makeIntent(Context context) {
 
         return new Intent(context, WeatherServiceSync.class);
     }
 
     /**
      * Binder object sent back to the callback ServiceConnection.
-     *
+     * <p/>
      * The WeatherOneWayRequest.Stub extends a Binder Class which implements IBinder
      * so the returned IBinder is cast from WeatherOneWayRequest.Stub
      */
@@ -53,7 +54,7 @@ public class WeatherServiceSync extends Service {
 
     /**
      * System generated Class : app/build/generated/source/aidl/debug/com/treefrogapps/a3_weatherservice/model/aidl
-     *
+     * <p/>
      * static abstract inner class 'Stub' which has the defined methods in the corresponding aidl file
      * which MUST be overridden.  This runs in a separate thread
      */

@@ -1,5 +1,7 @@
 package com.treefrogapps.a3_weatherservice.common;
 
+import android.util.Log;
+
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
 
@@ -10,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WeatherDataCache {
 
+    private static String TAG = WeatherDataCache.class.getSimpleName();
+
     public static ConcurrentHashMap<String, WeatherCurrentData> weatherCurrentHashMap
             = new ConcurrentHashMap<>();
 
@@ -18,7 +22,7 @@ public class WeatherDataCache {
 
     private static final long TIMEOUT_CURRENT_WEATHER = 1000 * 30; // 30 seconds
 
-    private static final long TIMEOUT_FORECAST_WEATHER = 1000 * 60 ; // 1 minute
+    private static final long TIMEOUT_FORECAST_WEATHER = 1000 * 60; // 1 minute
 
 
     /**
@@ -40,6 +44,7 @@ public class WeatherDataCache {
             long dataTime = weatherCurrentData.getTimeStamp();
             long currentTime = System.currentTimeMillis();
 
+            Log.e(TAG, "" + (currentTime - dataTime));
             if ((currentTime - dataTime) < TIMEOUT_CURRENT_WEATHER) {
 
                 return weatherCurrentData;
