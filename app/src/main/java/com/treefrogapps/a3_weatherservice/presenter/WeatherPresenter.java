@@ -115,14 +115,14 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
     @Override
     public void displayCurrentResults(WeatherCurrentData weatherCurrentData, String message) {
 
-        Log.d(TAG, "Data Retrieved for ; " + weatherCurrentData.getCity());
+        Log.d(TAG, "Data Retrieved for : " + weatherCurrentData.getCity());
 
     }
 
     @Override
     public void displayForecastResults(WeatherForecastData weatherForecastData, String message) {
 
-        Log.d(TAG, "Data Retrieved for ; " + weatherForecastData.getCity());
+        Log.d(TAG, "Data Retrieved for : " + weatherForecastData.getCity());
 
 
     }

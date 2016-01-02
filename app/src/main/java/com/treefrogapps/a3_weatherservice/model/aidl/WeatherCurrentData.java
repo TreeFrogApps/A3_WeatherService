@@ -47,6 +47,9 @@ public class WeatherCurrentData implements Parcelable {
     @Expose(serialize = false, deserialize = false)
     private long mTimeStamp;
 
+    @Expose(serialize = false, deserialize = false)
+    private int mWeatherListSize;
+
     public long getTimeStamp() {
         return this.mTimeStamp;
     }
@@ -407,10 +410,15 @@ public class WeatherCurrentData implements Parcelable {
         mCoordinates = new Coordinates(in.readDouble(),
                 in.readDouble());
 
-        mWeatherList.add(new Weather(in.readInt(),
-                in.readString(),
-                in.readString(),
-                in.readString()));
+        mWeatherListSize = in.readInt();
+
+        for (int i = 0; i < mWeatherListSize; i++){
+
+            mWeatherList.add(new Weather(in.readInt(),
+                    in.readString(),
+                    in.readString(),
+                    in.readString()));
+        }
 
         mBase = in.readString();
 
@@ -457,11 +465,16 @@ public class WeatherCurrentData implements Parcelable {
         dest.writeDouble(mCoordinates.getLongitude());
         dest.writeDouble(mCoordinates.getLatitude());
 
-        Weather mWeather = mWeatherList.get(0);
-        dest.writeInt(mWeather.getWeatherId());
-        dest.writeString(mWeather.getWeatherType());
-        dest.writeString(mWeather.getWeatherDescription());
-        dest.writeString(mWeather.getIcon());
+        dest.writeInt(mWeatherList.size());
+
+        for (int i = 0; i < mWeatherList.size(); i++){
+
+            Weather mWeather = mWeatherList.get(i);
+            dest.writeInt(mWeather.getWeatherId());
+            dest.writeString(mWeather.getWeatherType());
+            dest.writeString(mWeather.getWeatherDescription());
+            dest.writeString(mWeather.getIcon());
+        }
 
         dest.writeString(mBase);
 
