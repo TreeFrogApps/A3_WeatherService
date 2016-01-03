@@ -1,6 +1,7 @@
 package com.treefrogapps.a3_weatherservice.common;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -16,6 +17,9 @@ import com.treefrogapps.a3_weatherservice.presenter.WeatherPresenter;
  *
  * @param <ViewInterface> Generic view interface (defined when Generic Activity is extended)
  * @param <Presenter>     Generic Presenter Class (defined with Generic Activity is extended)
+ *                        'Presenter' extends just the interface required by Generic Activity
+ *                        the interface Presenter uses is the MVP.PresenterInterface (which
+ *                        extends PresenterOperations)
  */
 public abstract class GenericActivity<ViewInterface, Presenter extends PresenterOperations<ViewInterface>>
         extends AppCompatActivity implements ContextView {
@@ -96,6 +100,7 @@ public abstract class GenericActivity<ViewInterface, Presenter extends Presenter
         mPresenter.onConfigChange(viewInterface);
     }
 
+
     /**
      * Method to return a Context
      *
@@ -114,6 +119,16 @@ public abstract class GenericActivity<ViewInterface, Presenter extends Presenter
     @Override
     public Context getAppContext() {
         return getApplicationContext();
+    }
+
+
+    /**
+     * Method to return Fragment Manager
+     * @return fragment manager
+     */
+    @Override
+    public FragmentManager getFragManager() {
+        return getSupportFragmentManager();
     }
 
     /**

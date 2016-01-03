@@ -1,12 +1,14 @@
 package com.treefrogapps.a3_weatherservice.presenter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.treefrogapps.a3_weatherservice.MVP;
 import com.treefrogapps.a3_weatherservice.model.WeatherModel;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
+import com.treefrogapps.a3_weatherservice.view.DownloadDialog;
 
 import java.lang.ref.WeakReference;
 
@@ -18,10 +20,13 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
 
     public static final String TAG = WeatherPresenter.class.getSimpleName();
 
+    private final String DIALOG_TAG = "dialog_tag";
+
     private WeakReference<MVP.WeatherViewInterface> mViewInterface;
 
     private WeatherModel mWeatherModel;
 
+    private DownloadDialog mDownloadDialog;
 
     @Override
     public void onCreate(MVP.WeatherViewInterface viewInterface) {
@@ -55,24 +60,29 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
         Log.d(TAG, "onConfigChangeCalled");
 
         mViewInterface = new WeakReference<>(viewInterface);
+
+        /**
+         * Update the Presenter Weak Reference in the Download dialog - if one exists
+         * necessary at the presenter has a new reference to the view layer/interface
+         * which has updated contexts
+         */
+        mDownloadDialog = (DownloadDialog) getFragManager().findFragmentByTag(DIALOG_TAG);
+
+        if (mDownloadDialog != null){
+            mDownloadDialog.setPresenterInterface(this);
+        }
     }
+
 
     /**
-     * Methods for gaining contexts from the WeatherActivity, which extends
-     * Generic Activity which Implements this interface along with the Presenter interface
-     *
-     * @return a Context
+     * Method called from view layer to open new dialog window
      */
     @Override
-    public Context getActivityContext() {
-        return mViewInterface.get().getActivityContext();
-    }
+    public void openDownloadDialog() {
 
-    @Override
-    public Context getAppContext() {
-        return mViewInterface.get().getAppContext();
+        mDownloadDialog = DownloadDialog.newInstance(this);
+        mDownloadDialog.show(mViewInterface.get().getFragManager(), DIALOG_TAG);
     }
-
 
     /**
      * Methods (4) for retrieving Weather Data from the Model layer
@@ -115,18 +125,40 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
     @Override
     public void displayCurrentResults(WeatherCurrentData weatherCurrentData, String message) {
 
-        Log.d(TAG, "Data Retrieved for : " + weatherCurrentData.getCity());
+        Log.d(TAG, "Current Data Retrieved for : " + weatherCurrentData.getCity());
 
     }
 
     @Override
     public void displayForecastResults(WeatherForecastData weatherForecastData, String message) {
 
-        Log.d(TAG, "Data Retrieved for : " + weatherForecastData.getCity());
+        Log.d(TAG, "Forecast Data Retrieved for : " + weatherForecastData.getCity().getCityName());
 
 
     }
 
+    /**
+     * Methods for gaining contexts from the Weather Activity, which extends
+     * Generic Activity which Implements this interface along with the Presenter interface
+     * if Generic Activity doesn't implement the methods (declared abstract - so doesn't need to)
+     * then any Sub Classes must implement them (non-abstract sub classes)
+     *
+     * @return a Context
+     */
+    @Override
+    public Context getActivityContext() {
+        return mViewInterface.get().getActivityContext();
+    }
+
+    @Override
+    public Context getAppContext() {
+        return mViewInterface.get().getAppContext();
+    }
+
+    @Override
+    public FragmentManager getFragManager() {
+        return mViewInterface.get().getFragManager();
+    }
 
     @Override
     public void onDestroy() {

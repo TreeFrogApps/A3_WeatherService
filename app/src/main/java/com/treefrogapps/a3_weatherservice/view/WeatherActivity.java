@@ -1,7 +1,10 @@
 package com.treefrogapps.a3_weatherservice.view;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.treefrogapps.a3_weatherservice.MVP;
 import com.treefrogapps.a3_weatherservice.R;
@@ -9,7 +12,9 @@ import com.treefrogapps.a3_weatherservice.common.GenericActivity;
 import com.treefrogapps.a3_weatherservice.presenter.WeatherPresenter;
 
 public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, WeatherPresenter>
-        implements MVP.WeatherViewInterface {
+        implements MVP.WeatherViewInterface, View.OnClickListener {
+
+    private RecyclerView recyclerView;
 
     private static String TAG = WeatherActivity.class.getSimpleName();
 
@@ -26,7 +31,35 @@ public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, W
          */
         super.onCreate(this, WeatherPresenter.class);
 
+        initialiseUI();
     }
+
+    private void initialiseUI() {
+
+        FloatingActionButton mFab = (FloatingActionButton) findViewById(R.id.fabButton);
+        mFab.setOnClickListener(this);
+    }
+
+
+
+    @Override
+    public void onClick(View v) {
+
+
+        switch (v.getId()){
+
+            case R.id.fabButton :
+
+                openDialog();
+                break;
+        }
+    }
+
+    private void openDialog() {
+
+        getPresenter().openDownloadDialog();
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -37,4 +70,6 @@ public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, W
         if (isFinishing()) getPresenter().onDestroy();
 
     }
+
+
 }

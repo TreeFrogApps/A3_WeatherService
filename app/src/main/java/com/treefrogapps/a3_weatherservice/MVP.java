@@ -51,6 +51,8 @@ public interface MVP {
 
         void displayForecastResults(WeatherForecastData weatherForecastData, String message);
 
+        void openDownloadDialog();
+
     }
 
     /**
