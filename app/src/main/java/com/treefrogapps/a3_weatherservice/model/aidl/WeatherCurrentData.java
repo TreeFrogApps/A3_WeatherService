@@ -228,7 +228,7 @@ public class WeatherCurrentData implements Parcelable {
     public static class Main {
 
         // Constructor required for writing in from parcel
-        public Main(double temp, int pressure, int humidity, double tempMin, double tempMax) {
+        public Main(double temp, double pressure, int humidity, double tempMin, double tempMax) {
 
             this.mTemp = temp;
             this.mPressure = pressure;
@@ -241,7 +241,7 @@ public class WeatherCurrentData implements Parcelable {
         private double mTemp;
 
         @SerializedName("pressure")
-        private int mPressure;
+        private double mPressure;
 
         @SerializedName("humidity")
         private int mHumidity;
@@ -257,7 +257,7 @@ public class WeatherCurrentData implements Parcelable {
             return mTemp;
         }
 
-        public int getPressure() {
+        public double getPressure() {
             return mPressure;
         }
 
@@ -281,7 +281,7 @@ public class WeatherCurrentData implements Parcelable {
     public static class Wind {
 
         // Constructor required for writing in from parcel
-        public Wind(double windSpeed, int degrees) {
+        public Wind(double windSpeed, double degrees) {
 
             this.mWindSpeed = windSpeed;
             this.mDegrees = degrees;
@@ -291,14 +291,14 @@ public class WeatherCurrentData implements Parcelable {
         private double mWindSpeed;
 
         @SerializedName("deg")
-        private int mDegrees;
+        private double mDegrees;
 
 
         public double getWindSpeed() {
             return mWindSpeed;
         }
 
-        public int getDegress() {
+        public double getDegress() {
             return mDegrees;
         }
     }
@@ -423,7 +423,7 @@ public class WeatherCurrentData implements Parcelable {
         mBase = in.readString();
 
         mMain = new Main(in.readDouble(),
-                in.readInt(),
+                in.readDouble(),
                 in.readInt(),
                 in.readDouble(),
                 in.readDouble());
@@ -431,7 +431,7 @@ public class WeatherCurrentData implements Parcelable {
         mVisibility = in.readLong();
 
         mWind = new Wind(in.readDouble(),
-                in.readInt());
+                in.readDouble());
 
         mClouds = new Clouds(in.readInt());
 
@@ -479,7 +479,7 @@ public class WeatherCurrentData implements Parcelable {
         dest.writeString(mBase);
 
         dest.writeDouble(mMain.getTemp());
-        dest.writeInt(mMain.getPressure());
+        dest.writeDouble(mMain.getPressure());
         dest.writeInt(mMain.getHumidity());
         dest.writeDouble(mMain.getTempMin());
         dest.writeDouble(mMain.getTempMax());
@@ -487,7 +487,7 @@ public class WeatherCurrentData implements Parcelable {
         dest.writeLong(mVisibility);
 
         dest.writeDouble(mWind.getWindSpeed());
-        dest.writeInt(mWind.getDegress());
+        dest.writeDouble(mWind.getDegress());
 
         dest.writeInt(mClouds.getCloudCover());
 

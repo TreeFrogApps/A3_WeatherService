@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
-import com.treefrogapps.a3_weatherservice.common.WeatherDataCache;
 import com.treefrogapps.a3_weatherservice.model.WeatherModel;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
@@ -78,6 +77,10 @@ public class WeatherServiceAsync extends Service {
 
             final String city = location;
 
+            /**
+             * Create a runnable object to 'run' on a different pool of threads from the
+             * Executor Service
+             */
             final Runnable currentWeatherRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -94,23 +97,24 @@ public class WeatherServiceAsync extends Service {
 
                     /**
                      * Send either string with error in for debugging, or if successful send back
-                     * weather data
+                     * weather data, if weather is null (null returned from download Utils) then send
+                     * error back to user
                      */
                     try {
 
                         if (error != null) {
 
-                            resultsCallback.sendError(error);
+                            Log.e(TAG, error);
+
+                            resultsCallback.sendError("Internal Error getting weather data");
+
+                        } else if (weatherCurrentData == null) {
+
+                            resultsCallback.sendError("No Weather Data for " + city + " available");
 
                         } else {
 
-                            Log.d(TAG, "New Current data for " + city.toUpperCase() +
-                                    " added to Concurrent HashMap");
-
-                            WeatherDataCache.putCurrentHashMap(city, weatherCurrentData);
-
                             resultsCallback.sendCurrentResults(weatherCurrentData);
-
                         }
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -127,6 +131,10 @@ public class WeatherServiceAsync extends Service {
 
             final String city = location;
 
+            /**
+             * Create a runnable object to 'run' on a different pool of threads from the
+             * Executor Service
+             */
             final Runnable forecastWeatherRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -143,28 +151,28 @@ public class WeatherServiceAsync extends Service {
 
                     /**
                      * Send either string with error in for debugging, or if successful send back
-                     * weather data
+                     * weather data, if weather is null (null returned from download Utils) then send
+                     * error back to user
                      */
                     try {
 
                         if (error != null) {
 
-                            resultsCallback.sendError(error);
+                            Log.e(TAG, error);
+
+                            resultsCallback.sendError("Internal Error getting weather data");
+
+                        } else if (weatherForecastData == null) {
+
+                            resultsCallback.sendError("No Weather Data for " + city + " available");
 
                         } else {
 
-                            Log.d(TAG, "New Forecast data for " + city.toUpperCase() +
-                                    " added to Concurrent HashMap");
-
-                            WeatherDataCache.putForeCastHashMap(city, weatherForecastData);
-
                             resultsCallback.sendForecastResults(weatherForecastData);
-
                         }
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-
                 }
             };
 

@@ -3,7 +3,6 @@ package com.treefrogapps.a3_weatherservice.model.aidl;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.treefrogapps.a3_weatherservice.common.WeatherDataCache;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,13 +38,15 @@ public class WeatherDataParser {
         // close the reader - this will also close the input stream associated with it
         inputStreamReader.close();
 
-        // set a time stamp for the data
-        weatherCurrentData.setTimeStamp(System.currentTimeMillis());
+        if (weatherCurrentData.getCity() != null){
 
-        // put weather object into concurrent hash map
-        WeatherDataCache.putCurrentHashMap(weatherCurrentData.getCity(), weatherCurrentData);
+            // set a time stamp for the data
+            weatherCurrentData.setTimeStamp(System.currentTimeMillis());
 
-        return weatherCurrentData;
+            return weatherCurrentData;
+        }
+
+        return null;
     }
 
 
@@ -69,13 +70,14 @@ public class WeatherDataParser {
         // close the reader - this will also close the input stream associated with it
         inputStreamReader.close();
 
-        // set a time stamp for the weather data
-        weatherForecastData.setTimeStamp(System.currentTimeMillis());
+        if (weatherForecastData.getCity() != null){
 
-        // put weather object into concurrent hash map
-        WeatherDataCache.putForeCastHashMap(weatherForecastData
-                .getCity().getCityName(), weatherForecastData);
+            // set a time stamp for the weather data
+            weatherForecastData.setTimeStamp(System.currentTimeMillis());
 
-        return weatherForecastData;
+            return weatherForecastData;
+        }
+
+        return null;
     }
 }

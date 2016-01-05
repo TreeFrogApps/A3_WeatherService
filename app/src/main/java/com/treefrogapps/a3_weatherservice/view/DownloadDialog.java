@@ -12,10 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.treefrogapps.a3_weatherservice.MVP;
 import com.treefrogapps.a3_weatherservice.R;
+import com.treefrogapps.a3_weatherservice.utils.DownloadUtils;
+import com.treefrogapps.a3_weatherservice.utils.Utils;
 
 import java.lang.ref.WeakReference;
 
@@ -121,17 +122,23 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
         switch (v.getId()) {
 
             case R.id.dialogCancelButton:
-                cancelPresed();
+                cancelPressed();
                 break;
 
             case R.id.dialogSyncButton:
-                syncAsyncPressed(mLocation.getText().toString(),
-                        mCountryCode.getText().toString(), SYNC);
+                if (DownloadUtils.checkConnection(mPresenterInterface.get().getActivityContext())){
+
+                    syncAsyncPressed(mLocation.getText().toString(),
+                            mCountryCode.getText().toString(), SYNC);
+                } else {Utils.showToast(mPresenterInterface.get().getActivityContext(), "No Connection");}
                 break;
 
             case R.id.dialogASyncButton:
+                if (DownloadUtils.checkConnection(mPresenterInterface.get().getActivityContext())){
                 syncAsyncPressed(mLocation.getText().toString(),
                         mCountryCode.getText().toString(), ASYNC);
+                } else {Utils.showToast(mPresenterInterface.get().getActivityContext(), "No Connection");}
+                break;
         }
 
     }
@@ -139,7 +146,7 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
     /**
      * Close the dialog window
      */
-    public void cancelPresed() {
+    public void cancelPressed() {
 
         mDialog.dismiss();
     }
@@ -157,15 +164,14 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
 
         int checkedId = mRadioGroup.getCheckedRadioButtonId();
 
-        if (!location.equals("")) {
+        if (Utils.checkText(location)) {
 
             if (!countryCode.equals("")) {
 
                 location = location.trim() + "," + countryCode.trim();
             }
 
-            Toast.makeText(mPresenterInterface.get().getAppContext(),
-                    "Getting Weather Data", Toast.LENGTH_SHORT).show();
+            Utils.showToast(mPresenterInterface.get().getAppContext(), "Getting Weather Data");
 
             switch (type) {
 
@@ -192,8 +198,7 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
 
         } else {
 
-            Toast.makeText(mPresenterInterface.get().getAppContext(),
-                    "Enter a location", Toast.LENGTH_SHORT).show();
+            Utils.showToast(mPresenterInterface.get().getAppContext(), "Enter a location");
         }
     }
 

@@ -20,10 +20,9 @@ public class WeatherDataCache {
     public static ConcurrentHashMap<String, WeatherForecastData> weatherForecastHashMap
             = new ConcurrentHashMap<>();
 
-    private static final long TIMEOUT_CURRENT_WEATHER = 1000 * 30; // 30 seconds
+    private static final long TIMEOUT_CURRENT_WEATHER = 1000 * 10; // 10 seconds - increase for actual production app
 
-    private static final long TIMEOUT_FORECAST_WEATHER = 1000 * 60; // 1 minute
-
+    private static final long TIMEOUT_FORECAST_WEATHER = 1000 * 10; // 10 seconds - increase for actual production app
 
     /**
      * Method to check the Concurrent HashMap (Thread Safe) cache if the location has already been
@@ -44,7 +43,8 @@ public class WeatherDataCache {
             long dataTime = weatherCurrentData.getTimeStamp();
             long currentTime = System.currentTimeMillis();
 
-            Log.e(TAG, "" + (currentTime - dataTime));
+            Log.e(TAG, (currentTime - dataTime) + "ms");
+
             if ((currentTime - dataTime) < TIMEOUT_CURRENT_WEATHER) {
 
                 return weatherCurrentData;
@@ -54,7 +54,6 @@ public class WeatherDataCache {
                 weatherCurrentHashMap.remove(location);
             }
         }
-
         return null;
     }
 
@@ -78,6 +77,8 @@ public class WeatherDataCache {
             long dataTime = weatherforecastData.getTimeStamp();
             long currentTime = System.currentTimeMillis();
 
+            Log.e(TAG, (currentTime - dataTime) + "ms");
+
             if ((currentTime - dataTime) < TIMEOUT_FORECAST_WEATHER) {
 
                 return weatherforecastData;
@@ -87,7 +88,6 @@ public class WeatherDataCache {
                 weatherCurrentHashMap.remove(location);
             }
         }
-
         return null;
     }
 

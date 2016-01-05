@@ -4,7 +4,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -17,6 +19,7 @@ import com.treefrogapps.a3_weatherservice.model.aidl.WeatherOneWayRequest;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherTwoWay;
 import com.treefrogapps.a3_weatherservice.model.services.WeatherServiceAsync;
 import com.treefrogapps.a3_weatherservice.model.services.WeatherServiceSync;
+import com.treefrogapps.a3_weatherservice.utils.Utils;
 
 import java.lang.ref.WeakReference;
 
@@ -179,17 +182,23 @@ public class WeatherModel implements MVP.WeatherModelInterface {
 
                     if (weatherCurrentData != null) {
 
-                        Log.d(TAG, "New Current data for " + location.toUpperCase() +
+                        Log.d(TAG, "New Current data for "
+                                + weatherCurrentData.getCity().toUpperCase() +
                                 " added to Concurrent HashMap");
 
-                        WeatherDataCache.putCurrentHashMap(location, weatherCurrentData);
+                        // put weather object into concurrent hash map
+                        WeatherDataCache.putCurrentHashMap(weatherCurrentData.getCity(), weatherCurrentData);
 
                         mPresenterInterface.get().displayCurrentResults(weatherCurrentData, NEW_DATA);
+
+                    } else {
+
+                        Utils.showToast(mPresenterInterface.get().getActivityContext(),
+                                "No Weather data for " + location + " available");
                     }
                 }
             }.execute(location);
         }
-
     }
 
     /**
@@ -243,12 +252,19 @@ public class WeatherModel implements MVP.WeatherModelInterface {
 
                     if (weatherForecastData != null) {
 
-                        Log.d(TAG, "New Forecast data for " + location.toUpperCase() +
+                        Log.d(TAG, "New Forecast data for "
+                                + weatherForecastData.getCity().getCityName().toUpperCase() +
                                 " added to Concurrent HashMap");
 
-                        WeatherDataCache.putForeCastHashMap(location, weatherForecastData);
+                        // put weather object into concurrent hash map
+                        WeatherDataCache.putForeCastHashMap(weatherForecastData
+                                .getCity().getCityName(), weatherForecastData);
 
                         mPresenterInterface.get().displayForecastResults(weatherForecastData, NEW_DATA);
+                    } else {
+
+                        Utils.showToast(mPresenterInterface.get().getActivityContext(),
+                                "No Weather data for " + location + " available");
                     }
                 }
             }.execute(location);
@@ -328,6 +344,13 @@ public class WeatherModel implements MVP.WeatherModelInterface {
         public void sendCurrentResults(WeatherCurrentData weatherCurrentData)
                 throws RemoteException {
 
+            Log.d(TAG, "New Current data for "
+                    + weatherCurrentData.getCity().toUpperCase() +
+                    " added to Concurrent HashMap");
+
+            // put weather object into concurrent hash map
+            WeatherDataCache.putCurrentHashMap(weatherCurrentData.getCity(), weatherCurrentData);
+
             // Send results back to the Presenter Layer
             mPresenterInterface.get().displayCurrentResults(weatherCurrentData, NEW_DATA);
         }
@@ -336,6 +359,14 @@ public class WeatherModel implements MVP.WeatherModelInterface {
         public void sendForecastResults(WeatherForecastData weatherForecastData)
                 throws RemoteException {
 
+            Log.d(TAG, "New Forecast data for "
+                    + weatherForecastData.getCity().getCityName().toUpperCase() +
+                    " added to Concurrent HashMap");
+
+            // put weather object into concurrent hash map
+            WeatherDataCache.putForeCastHashMap(weatherForecastData
+                    .getCity().getCityName(), weatherForecastData);
+
             // Send results back the the Presenter Layer
             mPresenterInterface.get().displayForecastResults(weatherForecastData, NEW_DATA);
         }
@@ -343,7 +374,22 @@ public class WeatherModel implements MVP.WeatherModelInterface {
         @Override
         public void sendError(String error) throws RemoteException {
 
-            Log.e(TAG, "Error handling Async request : " + error);
+            final String message = error;
+
+            /**
+             * Create new Handler to 'post' message to user - the handler has to given
+             * the main looper (UI Looper) as this code block is running from a different thread
+             */
+            Handler handler = new Handler(Looper.getMainLooper());
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    Utils.showToast(mPresenterInterface.get().getActivityContext(), message);
+                }
+            });
+
         }
     };
 

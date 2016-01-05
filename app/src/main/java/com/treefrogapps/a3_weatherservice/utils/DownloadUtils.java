@@ -1,5 +1,9 @@
 package com.treefrogapps.a3_weatherservice.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.treefrogapps.a3_weatherservice.model.WeatherModel;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherDataParser;
 
@@ -56,5 +60,15 @@ public class DownloadUtils {
         }
 
         return null;
+    }
+
+
+    public static boolean checkConnection(Context context){
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+        return networkInfo != null && networkInfo.isConnected();
     }
 }
