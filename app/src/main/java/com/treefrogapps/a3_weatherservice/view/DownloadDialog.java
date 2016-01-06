@@ -17,7 +17,7 @@ import com.treefrogapps.a3_weatherservice.MVP;
 import com.treefrogapps.a3_weatherservice.R;
 import com.treefrogapps.a3_weatherservice.presenter.WeatherPresenter;
 import com.treefrogapps.a3_weatherservice.utils.DownloadUtils;
-import com.treefrogapps.a3_weatherservice.utils.Utils;
+import com.treefrogapps.a3_weatherservice.utils.utils;
 
 import java.lang.ref.WeakReference;
 
@@ -131,14 +131,14 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
 
                     syncAsyncPressed(mLocation.getText().toString(),
                             mCountryCode.getText().toString(), SYNC);
-                } else {Utils.showToast(mPresenterInterface.get().getActivityContext(), "No Connection");}
+                } else {utils.showToast(mPresenterInterface.get().getActivityContext(), "No Connection");}
                 break;
 
             case R.id.dialogASyncButton:
                 if (DownloadUtils.checkConnection(mPresenterInterface.get().getActivityContext())){
                 syncAsyncPressed(mLocation.getText().toString(),
                         mCountryCode.getText().toString(), ASYNC);
-                } else {Utils.showToast(mPresenterInterface.get().getActivityContext(), "No Connection");}
+                } else {utils.showToast(mPresenterInterface.get().getActivityContext(), "No Connection");}
                 break;
         }
 
@@ -165,7 +165,7 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
 
         int checkedId = mRadioGroup.getCheckedRadioButtonId();
 
-        if (Utils.checkText(location)) {
+        if (utils.checkText(location)) {
 
             if (!countryCode.equals("")) {
 
@@ -174,7 +174,7 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
 
             WeatherPresenter.RETRIEVING_DATA = true;
 
-            Utils.showToast(mPresenterInterface.get().getAppContext(), "Getting Weather Data");
+            utils.showToast(mPresenterInterface.get().getAppContext(), "Getting Weather Data");
 
             switch (type) {
 
@@ -201,7 +201,7 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
 
         } else {
 
-            Utils.showToast(mPresenterInterface.get().getAppContext(), "Enter a location");
+            utils.showToast(mPresenterInterface.get().getAppContext(), "Enter a location");
         }
     }
 
