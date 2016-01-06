@@ -10,6 +10,7 @@ import com.treefrogapps.a3_weatherservice.MVP;
 import com.treefrogapps.a3_weatherservice.R;
 import com.treefrogapps.a3_weatherservice.common.GenericActivity;
 import com.treefrogapps.a3_weatherservice.presenter.WeatherPresenter;
+import com.treefrogapps.a3_weatherservice.utils.Utils;
 
 public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, WeatherPresenter>
         implements MVP.WeatherViewInterface, View.OnClickListener {
@@ -50,7 +51,12 @@ public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, W
 
             case R.id.fabButton :
 
-                openDialog();
+                if(!WeatherPresenter.RETRIEVING_DATA){
+                    openDialog();
+                } else {
+                    Utils.showToast(this, "Currently Retrieving Weather Data");
+                }
+
                 break;
         }
     }

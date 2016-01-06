@@ -15,6 +15,7 @@ import android.widget.RadioGroup;
 
 import com.treefrogapps.a3_weatherservice.MVP;
 import com.treefrogapps.a3_weatherservice.R;
+import com.treefrogapps.a3_weatherservice.presenter.WeatherPresenter;
 import com.treefrogapps.a3_weatherservice.utils.DownloadUtils;
 import com.treefrogapps.a3_weatherservice.utils.Utils;
 
@@ -170,6 +171,8 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
 
                 location = location.trim() + "," + countryCode.trim();
             }
+
+            WeatherPresenter.RETRIEVING_DATA = true;
 
             Utils.showToast(mPresenterInterface.get().getAppContext(), "Getting Weather Data");
 

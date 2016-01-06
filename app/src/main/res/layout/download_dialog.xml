@@ -32,7 +32,7 @@
             android:id="@+id/dialogCityEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="textCapWords"
             android:singleLine="true"
             android:imeOptions="actionNext"
             android:hint="@string/dialog_hint_city"/>

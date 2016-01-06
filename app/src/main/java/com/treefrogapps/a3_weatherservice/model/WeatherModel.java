@@ -19,6 +19,7 @@ import com.treefrogapps.a3_weatherservice.model.aidl.WeatherOneWayRequest;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherTwoWay;
 import com.treefrogapps.a3_weatherservice.model.services.WeatherServiceAsync;
 import com.treefrogapps.a3_weatherservice.model.services.WeatherServiceSync;
+import com.treefrogapps.a3_weatherservice.presenter.WeatherPresenter;
 import com.treefrogapps.a3_weatherservice.utils.Utils;
 
 import java.lang.ref.WeakReference;
@@ -193,6 +194,8 @@ public class WeatherModel implements MVP.WeatherModelInterface {
 
                     } else {
 
+                        WeatherPresenter.RETRIEVING_DATA = false;
+
                         Utils.showToast(mPresenterInterface.get().getActivityContext(),
                                 "No Weather data for " + location + " available");
                     }
@@ -262,6 +265,8 @@ public class WeatherModel implements MVP.WeatherModelInterface {
 
                         mPresenterInterface.get().displayForecastResults(weatherForecastData, NEW_DATA);
                     } else {
+
+                        WeatherPresenter.RETRIEVING_DATA = false;
 
                         Utils.showToast(mPresenterInterface.get().getActivityContext(),
                                 "No Weather data for " + location + " available");
@@ -385,6 +390,8 @@ public class WeatherModel implements MVP.WeatherModelInterface {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+
+                    WeatherPresenter.RETRIEVING_DATA = false;
 
                     Utils.showToast(mPresenterInterface.get().getActivityContext(), message);
                 }

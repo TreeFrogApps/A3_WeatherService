@@ -22,6 +22,9 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
 
     private final String DIALOG_TAG = "dialog_tag";
 
+    // boolean to hold whether a weather request is in progress
+    public static volatile boolean RETRIEVING_DATA;
+
     private WeakReference<MVP.WeatherViewInterface> mViewInterface;
 
     private WeatherModel mWeatherModel;
@@ -125,6 +128,8 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
     @Override
     public void displayCurrentResults(WeatherCurrentData weatherCurrentData, String message) {
 
+        WeatherPresenter.RETRIEVING_DATA = false;
+
         Log.d(TAG, "Current Data Retrieved for : " + weatherCurrentData.getCity());
 
     }
@@ -132,8 +137,9 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
     @Override
     public void displayForecastResults(WeatherForecastData weatherForecastData, String message) {
 
-        Log.d(TAG, "Forecast Data Retrieved for : " + weatherForecastData.getCity().getCityName());
+        WeatherPresenter.RETRIEVING_DATA = false;
 
+        Log.d(TAG, "Forecast Data Retrieved for : " + weatherForecastData.getCity().getCityName());
 
     }
 

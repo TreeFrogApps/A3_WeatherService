@@ -20,9 +20,9 @@ public class WeatherDataCache {
     public static ConcurrentHashMap<String, WeatherForecastData> weatherForecastHashMap
             = new ConcurrentHashMap<>();
 
-    private static final long TIMEOUT_CURRENT_WEATHER = 1000 * 10; // 10 seconds - increase for actual production app
+    private static final long TIMEOUT_CURRENT_WEATHER = 1000 * 20; // 20 seconds - increase for actual production app
 
-    private static final long TIMEOUT_FORECAST_WEATHER = 1000 * 10; // 10 seconds - increase for actual production app
+    private static final long TIMEOUT_FORECAST_WEATHER = 1000 * 20; // 20 seconds - increase for actual production app
 
     /**
      * Method to check the Concurrent HashMap (Thread Safe) cache if the location has already been
