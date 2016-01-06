@@ -8,4 +8,15 @@
     <string name="button_async">ASync</string>
     <string name="radio_button_current">Current</string>
     <string name="radio_button_forecast">5 Day Forecast</string>
+    <string name="recycler_layout_current">(current)</string>
+    <string name="recycler_current_icon_desc">weather icon</string>
+    <string name="recycler_current_info">Information</string>
+    <string name="recycler_current_country">Country</string>
+    <string name="recycler_current_pressure">Pressure</string>
+    <string name="recycler_current_humidity">Humidity</string>
+    <string name="recycler_current_wspeed">Wind Speed</string>
+    <string name="recycler_current_rain">Rain</string>
+    <string name="recycler_current_clouds">Clouds</string>
+    <string name="recycler_current_sunrise">Sunrise</string>
+    <string name="recycler_current_sunset">Sunset</string>
 </resources>

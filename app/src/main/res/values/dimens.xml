@@ -3,5 +3,23 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="text_large">18sp</dimen>
+    <dimen name="activity_4dp">4dp</dimen>
+    <dimen name="activity_8dp">8dp</dimen>
+    <dimen name="activity_12dp">12dp</dimen>
+
+    <dimen name="padding_48dp">48dp</dimen>
+    <dimen name="padding_56dp">56dp</dimen>
+
+    <dimen name="text_16sp">16sp</dimen>
+    <dimen name="text_18sp">18sp</dimen>
+    <dimen name="text_20sp">20sp</dimen>
+    <dimen name="text_22sp">20sp</dimen>
+    <dimen name="text_24sp">24sp</dimen>
+    <dimen name="text_28sp">28sp</dimen>
+    <dimen name="text_32sp">32sp</dimen>
+    <dimen name="text_36sp">36sp</dimen>
+    <dimen name="text_40sp">40sp</dimen>
+    <dimen name="text_44sp">44sp</dimen>
+
+
 </resources>
