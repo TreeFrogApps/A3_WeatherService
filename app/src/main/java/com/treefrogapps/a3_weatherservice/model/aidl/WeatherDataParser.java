@@ -38,7 +38,7 @@ public class WeatherDataParser {
         // close the reader - this will also close the input stream associated with it
         inputStreamReader.close();
 
-        if (weatherCurrentData.getCity() != null){
+        if (weatherCurrentData.getCity() != null) {
 
             // set a time stamp for the data
             weatherCurrentData.setTimeStamp(System.currentTimeMillis());
@@ -70,7 +70,7 @@ public class WeatherDataParser {
         // close the reader - this will also close the input stream associated with it
         inputStreamReader.close();
 
-        if (weatherForecastData.getCity() != null){
+        if (weatherForecastData.getCity() != null) {
 
             // set a time stamp for the weather data
             weatherForecastData.setTimeStamp(System.currentTimeMillis());

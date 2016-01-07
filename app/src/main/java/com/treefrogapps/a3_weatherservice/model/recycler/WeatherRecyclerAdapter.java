@@ -23,8 +23,8 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private ArrayList<WeatherForecastData> mforecastData;
 
 
-    public WeatherRecyclerAdapter (Context context, ArrayList<WeatherCurrentData> currentData,
-                                   ArrayList<WeatherForecastData> forecastData) {
+    public WeatherRecyclerAdapter(Context context, ArrayList<WeatherCurrentData> currentData,
+                                  ArrayList<WeatherForecastData> forecastData) {
 
         this.mContext = context;
         this.mCurrentData = currentData;
@@ -34,14 +34,14 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private static class CurrentViewHolder extends RecyclerView.ViewHolder {
 
-        public CurrentViewHolder(View itemView){
+        public CurrentViewHolder(View itemView) {
             super(itemView);
         }
     }
 
     private static class ForecastViewHolder extends RecyclerView.ViewHolder {
 
-        public ForecastViewHolder(View itemView){
+        public ForecastViewHolder(View itemView) {
             super(itemView);
         }
     }
@@ -63,16 +63,15 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
-
     /**
      * Return the view type based on the array list sizes
      */
     @Override
     public int getItemViewType(int position) {
 
-        if (mCurrentData != null && mCurrentData.size() > 0){
+        if (mCurrentData != null && mCurrentData.size() > 0) {
             return CURRENT_VIEW_TYPE;
-        } else if (mforecastData != null && mforecastData.size() > 0){
+        } else if (mforecastData != null && mforecastData.size() > 0) {
             return FORECAST_VIEW_TYPE;
         }
         return 0;
@@ -87,9 +86,9 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
 
-        if (mCurrentData != null && mCurrentData.size() > 0){
+        if (mCurrentData != null && mCurrentData.size() > 0) {
             return mCurrentData.size();
-        } else if (mforecastData != null && mforecastData.size() > 0){
+        } else if (mforecastData != null && mforecastData.size() > 0) {
             return mforecastData.get(0).getWeatherLists().size();
         }
         return 0;

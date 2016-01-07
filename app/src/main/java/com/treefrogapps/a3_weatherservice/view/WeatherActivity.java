@@ -43,16 +43,15 @@ public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, W
     }
 
 
-
     @Override
     public void onClick(View v) {
 
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
-            case R.id.fabButton :
+            case R.id.fabButton:
 
-                if(!WeatherPresenter.RETRIEVING_DATA){
+                if (!WeatherPresenter.RETRIEVING_DATA) {
                     openDialog();
                 } else {
                     utils.showToast(this, "Currently Retrieving Weather Data");

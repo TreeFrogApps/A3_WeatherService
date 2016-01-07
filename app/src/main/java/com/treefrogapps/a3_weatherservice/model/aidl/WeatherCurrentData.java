@@ -412,7 +412,7 @@ public class WeatherCurrentData implements Parcelable {
 
         mWeatherListSize = in.readInt();
 
-        for (int i = 0; i < mWeatherListSize; i++){
+        for (int i = 0; i < mWeatherListSize; i++) {
 
             mWeatherList.add(new Weather(in.readInt(),
                     in.readString(),
@@ -467,7 +467,7 @@ public class WeatherCurrentData implements Parcelable {
 
         dest.writeInt(mWeatherList.size());
 
-        for (int i = 0; i < mWeatherList.size(); i++){
+        for (int i = 0; i < mWeatherList.size(); i++) {
 
             Weather mWeather = mWeatherList.get(i);
             dest.writeInt(mWeather.getWeatherId());

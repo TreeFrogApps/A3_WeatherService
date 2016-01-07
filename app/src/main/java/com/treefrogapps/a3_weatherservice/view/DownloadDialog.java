@@ -127,18 +127,22 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
                 break;
 
             case R.id.dialogSyncButton:
-                if (DownloadUtils.checkConnection(mPresenterInterface.get().getActivityContext())){
+                if (DownloadUtils.checkConnection(mPresenterInterface.get().getActivityContext())) {
 
                     syncAsyncPressed(mLocation.getText().toString(),
                             mCountryCode.getText().toString(), SYNC);
-                } else {utils.showToast(mPresenterInterface.get().getActivityContext(), "No Connection");}
+                } else {
+                    utils.showToast(mPresenterInterface.get().getActivityContext(), "No Connection");
+                }
                 break;
 
             case R.id.dialogASyncButton:
-                if (DownloadUtils.checkConnection(mPresenterInterface.get().getActivityContext())){
-                syncAsyncPressed(mLocation.getText().toString(),
-                        mCountryCode.getText().toString(), ASYNC);
-                } else {utils.showToast(mPresenterInterface.get().getActivityContext(), "No Connection");}
+                if (DownloadUtils.checkConnection(mPresenterInterface.get().getActivityContext())) {
+                    syncAsyncPressed(mLocation.getText().toString(),
+                            mCountryCode.getText().toString(), ASYNC);
+                } else {
+                    utils.showToast(mPresenterInterface.get().getActivityContext(), "No Connection");
+                }
                 break;
         }
 

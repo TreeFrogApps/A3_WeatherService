@@ -6,20 +6,41 @@
     <dimen name="activity_4dp">4dp</dimen>
     <dimen name="activity_8dp">8dp</dimen>
     <dimen name="activity_12dp">12dp</dimen>
+    <dimen name="activity_16dp">16dp</dimen>
+    <dimen name="activity_20dp">20dp</dimen>
+    <dimen name="activity_24dp">24dp</dimen>
+    <dimen name="activity_28dp">28dp</dimen>
+    <dimen name="activity_32dp">32dp</dimen>
+    <dimen name="activity_36dp">36dp</dimen>
+    <dimen name="activity_40dp">40dp</dimen>
+    <dimen name="activity_44dp">44dp</dimen>
 
     <dimen name="padding_48dp">48dp</dimen>
     <dimen name="padding_56dp">56dp</dimen>
+    <dimen name="padding_64dp">64dp</dimen>
+    <dimen name="padding_72dp">72dp</dimen>
+    <dimen name="padding_80dp">80dp</dimen>
+    <dimen name="padding_96dp">96dp</dimen>
+
 
     <dimen name="text_16sp">16sp</dimen>
     <dimen name="text_18sp">18sp</dimen>
     <dimen name="text_20sp">20sp</dimen>
-    <dimen name="text_22sp">20sp</dimen>
+    <dimen name="text_22sp">22sp</dimen>
     <dimen name="text_24sp">24sp</dimen>
     <dimen name="text_28sp">28sp</dimen>
     <dimen name="text_32sp">32sp</dimen>
     <dimen name="text_36sp">36sp</dimen>
     <dimen name="text_40sp">40sp</dimen>
     <dimen name="text_44sp">44sp</dimen>
+    <dimen name="text_48sp">48sp</dimen>
+    <dimen name="text_52sp">52sp</dimen>
+    <dimen name="text_56sp">56sp</dimen>
+    <dimen name="text_60sp">60sp</dimen>
+    <dimen name="text_64sp">64sp</dimen>
+    <dimen name="text_68sp">68sp</dimen>
+    <dimen name="text_72sp">72sp</dimen>
+    <dimen name="text_76sp">76sp</dimen>
 
 
 </resources>

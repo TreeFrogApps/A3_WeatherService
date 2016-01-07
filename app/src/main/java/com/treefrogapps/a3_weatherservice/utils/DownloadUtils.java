@@ -63,7 +63,7 @@ public class DownloadUtils {
     }
 
 
-    public static boolean checkConnection(Context context){
+    public static boolean checkConnection(Context context) {
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 

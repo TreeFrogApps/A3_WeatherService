@@ -124,6 +124,7 @@ public abstract class GenericActivity<ViewInterface, Presenter extends Presenter
 
     /**
      * Method to return Fragment Manager
+     *
      * @return fragment manager
      */
     @Override

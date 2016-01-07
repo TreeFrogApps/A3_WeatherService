@@ -47,9 +47,9 @@ public interface MVP {
 
         void getWeatherForecastASync(String location);
 
-        void displayCurrentResults(WeatherCurrentData weatherCurrentData, String message);
+        void displayCurrentResults(final WeatherCurrentData weatherCurrentData, String message);
 
-        void displayForecastResults(WeatherForecastData weatherForecastData, String message);
+        void displayForecastResults(final WeatherForecastData weatherForecastData, String message);
 
         void openDownloadDialog();
 

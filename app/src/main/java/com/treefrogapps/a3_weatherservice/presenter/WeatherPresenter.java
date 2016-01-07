@@ -1,6 +1,8 @@
 package com.treefrogapps.a3_weatherservice.presenter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
@@ -8,6 +10,7 @@ import com.treefrogapps.a3_weatherservice.MVP;
 import com.treefrogapps.a3_weatherservice.model.WeatherModel;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
+import com.treefrogapps.a3_weatherservice.utils.utils;
 import com.treefrogapps.a3_weatherservice.view.DownloadDialog;
 
 import java.lang.ref.WeakReference;
@@ -71,7 +74,7 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
          */
         mDownloadDialog = (DownloadDialog) getFragManager().findFragmentByTag(DIALOG_TAG);
 
-        if (mDownloadDialog != null){
+        if (mDownloadDialog != null) {
             mDownloadDialog.setPresenterInterface(this);
         }
     }
@@ -126,21 +129,37 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
      * @param weatherCurrentData weather data
      */
     @Override
-    public void displayCurrentResults(WeatherCurrentData weatherCurrentData, String message) {
+    public void displayCurrentResults(final WeatherCurrentData weatherCurrentData, String message) {
 
         WeatherPresenter.RETRIEVING_DATA = false;
 
         Log.d(TAG, "Current Data Retrieved for : " + weatherCurrentData.getCity());
 
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                utils.showToast(mViewInterface.get().getActivityContext(), "Current Data Retrieved for : " + weatherCurrentData.getCity());
+            }
+        });
     }
 
     @Override
-    public void displayForecastResults(WeatherForecastData weatherForecastData, String message) {
+    public void displayForecastResults(final WeatherForecastData weatherForecastData, String message) {
 
         WeatherPresenter.RETRIEVING_DATA = false;
 
         Log.d(TAG, "Forecast Data Retrieved for : " + weatherForecastData.getCity().getCityName());
 
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                utils.showToast(mViewInterface.get().getActivityContext(), "Forecast Data Retrieved for : " + weatherForecastData.getCity().getCityName());
+            }
+        });
     }
 
     /**

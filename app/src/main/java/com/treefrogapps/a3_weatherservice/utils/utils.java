@@ -10,12 +10,12 @@ import android.widget.Toast;
 public class utils {
 
 
-    public static void showToast(Context context, String message){
+    public static void showToast(Context context, String message) {
 
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static boolean checkText(String text){
+    public static boolean checkText(String text) {
 
         /**
          * Very simple checking procedure to verify a location
