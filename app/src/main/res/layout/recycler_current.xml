@@ -16,7 +16,6 @@
             android:id="@+id/currentTextViewCityName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="London Weather"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/text_22sp" />
 
@@ -49,13 +48,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="UselessParent">
 
                 <TextView
                     android:id="@+id/currentTextViewWeatherType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rain"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/text_22sp" />
 
@@ -64,7 +63,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/activity_4dp"
-                    android:text="Moderate Rain"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_16sp" />
 
@@ -78,7 +76,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/activity_12dp"
-                        android:text="14\u2103"
                         android:textColor="@color/colorAccent"
                         android:textSize="@dimen/text_44sp" />
 
@@ -87,9 +84,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/activity_12dp"
-                        android:text="57.2\u2109"
                         android:textColor="@color/secondary_text"
-                        android:textSize="@dimen/text_18sp" />
+                        android:textSize="@dimen/text_18sp"
+                        tools:ignore="RtlHardcoded" />
 
                 </LinearLayout>
 
@@ -109,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/recycler_current_icon_desc"
-                android:src="@mipmap/ic_rain" />
+                android:src="@mipmap/ic_no_image" />
 
         </LinearLayout>
 
@@ -140,7 +137,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -173,7 +171,6 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_48dp"
                         android:paddingTop="@dimen/activity_8dp"
-                        android:text="GB"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_16sp"
                         android:textStyle="bold"
@@ -186,7 +183,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -219,7 +217,6 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_48dp"
                         android:paddingTop="@dimen/activity_4dp"
-                        android:text="996 hPa"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_16sp"
                         tools:ignore="RtlHardcoded" />
@@ -231,7 +228,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -264,7 +262,6 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_48dp"
                         android:paddingTop="@dimen/activity_4dp"
-                        android:text="87 %"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_16sp"
                         tools:ignore="RtlHardcoded" />
@@ -276,7 +273,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -309,7 +307,6 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_48dp"
                         android:paddingTop="@dimen/activity_4dp"
-                        android:text="14 mph"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_16sp"
                         tools:ignore="RtlHardcoded" />
@@ -321,7 +318,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -335,7 +333,7 @@
                         android:layout_height="wrap_content"
                         android:paddingRight="@dimen/padding_48dp"
                         android:paddingTop="@dimen/activity_4dp"
-                        android:text="@string/recycler_current_rain"
+                        android:text="@string/recycler_current_time"
                         android:textColor="@color/secondary_text"
                         android:textSize="@dimen/text_16sp"
                         tools:ignore="RtlHardcoded" />
@@ -349,12 +347,11 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/currentTextViewRain"
+                        android:id="@+id/currentTextViewTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_48dp"
                         android:paddingTop="@dimen/activity_4dp"
-                        android:text="0.2 mm"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_16sp"
                         tools:ignore="RtlHardcoded" />
@@ -366,7 +363,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -399,7 +397,6 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_48dp"
                         android:paddingTop="@dimen/activity_4dp"
-                        android:text="100 %"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_16sp"
                         tools:ignore="RtlHardcoded" />
@@ -411,7 +408,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -444,7 +442,6 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_48dp"
                         android:paddingTop="@dimen/activity_4dp"
-                        android:text="08:22"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_16sp"
                         tools:ignore="RtlHardcoded" />
@@ -456,7 +453,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -470,6 +468,7 @@
                         android:layout_height="wrap_content"
                         android:paddingRight="@dimen/padding_48dp"
                         android:paddingTop="@dimen/activity_4dp"
+                        android:paddingBottom="@dimen/activity_8dp"
                         android:text="@string/recycler_current_sunset"
                         android:textColor="@color/secondary_text"
                         android:textSize="@dimen/text_16sp"
@@ -489,7 +488,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_48dp"
                         android:paddingTop="@dimen/activity_4dp"
-                        android:text="16:18"
+                        android:paddingBottom="@dimen/activity_8dp"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_16sp"
                         tools:ignore="RtlHardcoded" />

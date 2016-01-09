@@ -6,6 +6,8 @@ import com.treefrogapps.a3_weatherservice.common.PresenterOperations;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
 
+import java.util.ArrayList;
+
 /**
  * Model View Presenter Interfaces used with the corresponding classes
  * all methods for each class come from the interfaces.
@@ -26,6 +28,8 @@ public interface MVP {
      * super class method if requested from a WeatherActivity reference.
      */
     interface WeatherViewInterface extends ContextView {
+
+        void updateRecyclerView();
 
     }
 
@@ -52,6 +56,10 @@ public interface MVP {
         void displayForecastResults(final WeatherForecastData weatherForecastData, String message);
 
         void openDownloadDialog();
+
+        ArrayList<WeatherCurrentData> getWeatherCurrentList();
+
+        ArrayList<WeatherForecastData> getWeatherForecastList();
 
     }
 

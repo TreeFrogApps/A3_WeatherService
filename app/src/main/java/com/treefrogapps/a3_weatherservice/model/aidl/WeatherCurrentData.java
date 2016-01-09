@@ -298,7 +298,7 @@ public class WeatherCurrentData implements Parcelable {
             return mWindSpeed;
         }
 
-        public double getDegress() {
+        public double getDegrees() {
             return mDegrees;
         }
     }
@@ -487,7 +487,7 @@ public class WeatherCurrentData implements Parcelable {
         dest.writeLong(mVisibility);
 
         dest.writeDouble(mWind.getWindSpeed());
-        dest.writeDouble(mWind.getDegress());
+        dest.writeDouble(mWind.getDegrees());
 
         dest.writeInt(mClouds.getCloudCover());
 

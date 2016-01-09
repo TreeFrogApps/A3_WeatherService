@@ -2,6 +2,7 @@ package com.treefrogapps.a3_weatherservice.view;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -9,13 +10,15 @@ import android.view.View;
 import com.treefrogapps.a3_weatherservice.MVP;
 import com.treefrogapps.a3_weatherservice.R;
 import com.treefrogapps.a3_weatherservice.common.GenericActivity;
+import com.treefrogapps.a3_weatherservice.model.recycler.WeatherRecyclerAdapter;
 import com.treefrogapps.a3_weatherservice.presenter.WeatherPresenter;
 import com.treefrogapps.a3_weatherservice.utils.utils;
 
 public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, WeatherPresenter>
         implements MVP.WeatherViewInterface, View.OnClickListener {
 
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
+    private WeatherRecyclerAdapter mWeatherRecyclerAdapter;
 
     private static String TAG = WeatherActivity.class.getSimpleName();
 
@@ -40,12 +43,24 @@ public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, W
         FloatingActionButton mFab = (FloatingActionButton) findViewById(R.id.fabButton);
         mFab.setOnClickListener(this);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mWeatherRecyclerAdapter = new WeatherRecyclerAdapter(this,
+                getPresenter().getWeatherCurrentList(), getPresenter().getWeatherForecastList());
+
+        mRecyclerView.setAdapter(mWeatherRecyclerAdapter);
+
     }
 
+    @Override
+    public void updateRecyclerView() {
+
+        mWeatherRecyclerAdapter.notifyDataSetChanged();
+
+    }
 
     @Override
     public void onClick(View v) {
-
 
         switch (v.getId()) {
 

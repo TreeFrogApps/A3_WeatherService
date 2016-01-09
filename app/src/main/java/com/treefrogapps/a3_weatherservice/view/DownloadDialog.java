@@ -167,13 +167,15 @@ public class DownloadDialog extends DialogFragment implements View.OnClickListen
      */
     public void syncAsyncPressed(String location, String countryCode, int type) {
 
+        location = location.trim().replace(" ", "");
+
         int checkedId = mRadioGroup.getCheckedRadioButtonId();
 
         if (utils.checkText(location)) {
 
             if (!countryCode.equals("")) {
 
-                location = location.trim() + "," + countryCode.trim();
+                location = location + "," + countryCode.trim();
             }
 
             WeatherPresenter.RETRIEVING_DATA = true;

@@ -19,4 +19,5 @@
     <string name="recycler_current_clouds">Clouds</string>
     <string name="recycler_current_sunrise">Sunrise</string>
     <string name="recycler_current_sunset">Sunset</string>
+    <string name="recycler_current_time">Last Update</string>
 </resources>

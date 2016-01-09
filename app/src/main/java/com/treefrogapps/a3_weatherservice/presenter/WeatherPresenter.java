@@ -10,10 +10,10 @@ import com.treefrogapps.a3_weatherservice.MVP;
 import com.treefrogapps.a3_weatherservice.model.WeatherModel;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherCurrentData;
 import com.treefrogapps.a3_weatherservice.model.aidl.WeatherForecastData;
-import com.treefrogapps.a3_weatherservice.utils.utils;
 import com.treefrogapps.a3_weatherservice.view.DownloadDialog;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * Presenter layer that handles all requests from the view layer, as well as responding
@@ -33,6 +33,10 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
     private WeatherModel mWeatherModel;
 
     private DownloadDialog mDownloadDialog;
+
+    private ArrayList<WeatherCurrentData> mCurrentWeatherList = new ArrayList<>();
+
+    private ArrayList<WeatherForecastData> mForecastWeatherList = new ArrayList<>();
 
     @Override
     public void onCreate(MVP.WeatherViewInterface viewInterface) {
@@ -90,13 +94,13 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
         mDownloadDialog.show(mViewInterface.get().getFragManager(), DIALOG_TAG);
     }
 
+
     /**
      * Methods (4) for retrieving Weather Data from the Model layer
      * results are posted back to the Presenter Layer (displayResults)
      *
      * @param location location to get the weather for
      */
-
     @Override
     public void getWeatherCurrentSync(String location) {
 
@@ -123,7 +127,7 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
 
 
     /**
-     * Methods to display error or weather data results back to the View Layer
+     * Method to display error or weather data results back to the View Layer
      * Must be run on the UI thread to handle results from ASYNC service
      *
      * @param weatherCurrentData weather data
@@ -131,36 +135,79 @@ public class WeatherPresenter implements MVP.WeatherPresenterInterface {
     @Override
     public void displayCurrentResults(final WeatherCurrentData weatherCurrentData, String message) {
 
-        WeatherPresenter.RETRIEVING_DATA = false;
+        synchronized (this) {
 
-        Log.d(TAG, "Current Data Retrieved for : " + weatherCurrentData.getCity());
+            WeatherPresenter.RETRIEVING_DATA = false;
 
-        Handler handler = new Handler(Looper.getMainLooper());
+            Log.d(TAG, "Current Data Retrieved for : " + weatherCurrentData.getCity());
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                utils.showToast(mViewInterface.get().getActivityContext(), "Current Data Retrieved for : " + weatherCurrentData.getCity());
-            }
-        });
+            mCurrentWeatherList.clear();
+            mForecastWeatherList.clear();
+
+            mCurrentWeatherList.add(weatherCurrentData);
+
+            Handler handler = new Handler(Looper.getMainLooper());
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mViewInterface.get().updateRecyclerView();
+                }
+            });
+        }
     }
 
+    /**
+     * Method to display error or weather data results back to the View Layer
+     * Must be run on the UI thread to handle results from ASYNC service
+     *
+     * @param weatherForecastData weather data
+     */
     @Override
     public void displayForecastResults(final WeatherForecastData weatherForecastData, String message) {
 
-        WeatherPresenter.RETRIEVING_DATA = false;
+        synchronized (this) {
 
-        Log.d(TAG, "Forecast Data Retrieved for : " + weatherForecastData.getCity().getCityName());
+            WeatherPresenter.RETRIEVING_DATA = false;
 
-        Handler handler = new Handler(Looper.getMainLooper());
+            Log.d(TAG, "Forecast Data Retrieved for : " + weatherForecastData.getCity().getCityName());
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                utils.showToast(mViewInterface.get().getActivityContext(), "Forecast Data Retrieved for : " + weatherForecastData.getCity().getCityName());
-            }
-        });
+            mCurrentWeatherList.clear();
+            mForecastWeatherList.clear();
+
+            mForecastWeatherList.add(weatherForecastData);
+
+            Handler handler = new Handler(Looper.getMainLooper());
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mViewInterface.get().updateRecyclerView();
+                }
+            });
+        }
     }
+
+    /**
+     * Get the Weather Current List - used in the recycler view
+     *
+     * @return ArrayList of current weather
+     */
+    @Override
+    public ArrayList<WeatherCurrentData> getWeatherCurrentList() {
+        return mCurrentWeatherList;
+    }
+
+    /**
+     * Get the Weather Forecast list - used in the recyclerView
+     *
+     * @return ArrayList of forecast weather
+     */
+    @Override
+    public ArrayList<WeatherForecastData> getWeatherForecastList() {
+        return mForecastWeatherList;
+    }
+
 
     /**
      * Methods for gaining contexts from the Weather Activity, which extends
