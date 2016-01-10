@@ -25,19 +25,21 @@ public class WeatherUtils {
     public static String getLastUpdateTime(long time) {
 
         Calendar calendar = Calendar.getInstance();
+        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
         calendar.setTimeInMillis(time * 1000);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
-        return sdf.format(calendar.getTime());
+        return sdf.format(calendar.getTime()) + " (UTC)";
     }
 
     public static String getTimeOnly(long time) {
 
         Calendar calendar = Calendar.getInstance();
+        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
         calendar.setTimeInMillis(time * 1000);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
-        return sdf.format(calendar.getTime());
+        return sdf.format(calendar.getTime()) + " (UTC)";
     }
 
     public static int setWeatherIcon(String icon) {

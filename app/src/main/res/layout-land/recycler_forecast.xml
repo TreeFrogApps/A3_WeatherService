@@ -18,7 +18,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="9"
+            android:layout_weight="7"
             android:orientation="vertical">
 
             <LinearLayout
@@ -46,39 +46,47 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/activity_8dp"
                     android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/text_18sp" />
+                    android:textSize="@dimen/text_24sp" />
 
                 <TextView
                     android:id="@+id/forecastTextViewWeatherDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_14sp" />
-                
-                <LinearLayout
-                    android:layout_width="match_parent"
+                    android:textSize="@dimen/text_18sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="5"
+            android:layout_width="0dp"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/forecastTextViewTempDeg"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:paddingRight="@dimen/activity_16dp"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_44sp" />
 
-                    <TextView
-                        android:id="@+id/forecastTextViewTempDeg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="@dimen/activity_16dp"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/text_32sp" />
-
-                    <TextView
-                        android:id="@+id/forecastTextViewTempFah"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/secondary_text"
-                        android:textSize="@dimen/text_16sp"
-                        tools:ignore="RtlHardcoded" />
-                    
-                </LinearLayout>
-
-                
+                <TextView
+                    android:id="@+id/forecastTextViewTempFah"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/text_16sp"
+                    tools:ignore="RtlHardcoded" />
 
             </LinearLayout>
 
@@ -99,7 +107,7 @@
                 android:textColor="@color/colorRed"
                 android:textStyle="bold"
                 android:paddingTop="@dimen/activity_4dp"
-                android:textSize="@dimen/text_14sp" />
+                android:textSize="@dimen/text_16sp" />
 
             <ImageView
                 android:id="@+id/forecastImageViewWeatherIcon"

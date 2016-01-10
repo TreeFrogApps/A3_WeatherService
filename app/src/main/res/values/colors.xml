@@ -8,5 +8,7 @@
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#b9454545</color>
     <color name="icons">#FFFFFF</color>
-    <color name="divider">#1eb6b6b6</color>
+    <color name="divider">#3db6b6b6</color>
+    <color name="divider_2">#a6b6b6b6</color>
+    <color name="colorRed">#ff0000</color>
 </resources>

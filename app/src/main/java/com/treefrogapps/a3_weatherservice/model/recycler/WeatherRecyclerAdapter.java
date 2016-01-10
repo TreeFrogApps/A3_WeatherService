@@ -43,13 +43,13 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
      */
     private static class CurrentViewHolder extends RecyclerView.ViewHolder {
 
-        TextView currentTextViewCityName, currentTextViewWeatherType, currentTextViewWeatherDesc,
+        private TextView currentTextViewCityName, currentTextViewWeatherType, currentTextViewWeatherDesc,
                 currentTextViewTempDeg, currentTextViewTempFah, currentTextViewCountry,
                 currentTextViewPressure, currentTextViewHumidity, currentTextViewHWSpeed,
                 currentTextViewTime, currentTextViewClouds, currentTextViewSunRise,
                 currentTextViewSunset;
 
-        ImageView currentImageViewWeatherIcon;
+        private ImageView currentImageViewWeatherIcon;
 
         public CurrentViewHolder(View itemView) {
             super(itemView);
@@ -74,8 +74,23 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private static class ForecastViewHolder extends RecyclerView.ViewHolder {
 
+        private TextView forecastTextViewCityName, forecastTextViewWeatherType,
+                forecastTextViewWeatherDesc, forecastTextViewTempDeg,
+                forecastTextViewTempFah, forecastTextView3hrTime;
+
+        private ImageView forecastImageViewWeatherIcon;
+
         public ForecastViewHolder(View itemView) {
             super(itemView);
+
+            forecastTextViewCityName = (TextView) itemView.findViewById(R.id.forecastTextViewCityName);
+            forecastTextViewWeatherType = (TextView) itemView.findViewById(R.id.forecastTextViewWeatherType);
+            forecastTextViewWeatherDesc = (TextView) itemView.findViewById(R.id.forecastTextViewWeatherDesc);
+            forecastTextViewTempDeg = (TextView) itemView.findViewById(R.id.forecastTextViewTempDeg);
+            forecastTextViewTempFah = (TextView) itemView.findViewById(R.id.forecastTextViewTempFah);
+            forecastTextView3hrTime = (TextView) itemView.findViewById(R.id.forecastTextView3hrTime);
+
+            forecastImageViewWeatherIcon = (ImageView) itemView.findViewById(R.id.forecastImageViewWeatherIcon);
         }
     }
 
@@ -165,9 +180,53 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             case FORECAST_VIEW_TYPE:
 
+                ForecastViewHolder forecastHolder = (ForecastViewHolder) holder;
+                // cast the appropriate View Holder for the layout type
+                WeatherForecastData forecastData = mforecastData.get(0);
+
+                forecastHolder.forecastTextViewCityName.setText(forecastData
+                        .getCity().getCityName());
+
+                forecastHolder.forecastTextViewWeatherType.setText(forecastData
+                        .getWeatherLists()
+                        .get(position)
+                        .getCurrentWeather().get(0)
+                        .getWeatherType());
+
+                forecastHolder.forecastTextViewWeatherDesc.setText(forecastData
+                        .getWeatherLists()
+                        .get(position)
+                        .getCurrentWeather().get(0)
+                        .getWeatherDescription());
+
+                forecastHolder.forecastTextViewTempDeg.setText(WeatherUtils
+                        .kelvinToDegrees(forecastData
+                                .getWeatherLists()
+                                .get(position)
+                                .getMainInfo().getTemp()));
+
+                forecastHolder.forecastTextViewTempFah.setText(WeatherUtils
+                        .kelvinToFahrenheit(forecastData
+                                .getWeatherLists()
+                                .get(position)
+                                .getMainInfo().getTemp()));
+
+                String forecastDateTime = forecastData
+                        .getWeatherLists()
+                        .get(position)
+                        .getDateAsString();
+
+                forecastDateTime = forecastDateTime
+                        .substring(5, forecastDateTime.length() - 3) + " (UTC)";
+
+                forecastHolder.forecastTextView3hrTime.setText(forecastDateTime);
+
+                forecastHolder.forecastImageViewWeatherIcon.setImageResource(WeatherUtils
+                        .setWeatherIcon(forecastData
+                                .getWeatherLists().get(position)
+                                .getCurrentWeather().get(0).getIcon()));
                 break;
         }
-
     }
 
 
