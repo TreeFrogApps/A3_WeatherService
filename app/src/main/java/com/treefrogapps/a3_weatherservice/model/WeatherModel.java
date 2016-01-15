@@ -344,7 +344,7 @@ public class WeatherModel implements MVP.WeatherModelInterface {
     /**
      * Aidl one way Callback sent with one way request (observer pattern?)
      */
-    private WeatherOneWayReply.Stub mWeatherOneWayReplyCallBack = new WeatherOneWayReply.Stub() {
+    private final WeatherOneWayReply.Stub mWeatherOneWayReplyCallBack = new WeatherOneWayReply.Stub() {
         @Override
         public void sendCurrentResults(WeatherCurrentData weatherCurrentData)
                 throws RemoteException {

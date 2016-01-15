@@ -86,11 +86,9 @@ public class WeatherActivity extends GenericActivity<MVP.WeatherViewInterface, W
     protected void onDestroy() {
         super.onDestroy();
 
-        // App being destroyed, notify other layer to perform
+        // App being changing configurations if isChangingConfigurations returns true.
+        // Notify other layers if not true i.e. App is closing, to perform
         // any necessary clean up operations (unbind service)
-        if (isFinishing()) getPresenter().onDestroy();
-
+        if (!isChangingConfigurations()) getPresenter().onDestroy();
     }
-
-
 }
